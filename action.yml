@@ -1,0 +1,11 @@
+name: 'Setup scoop'
+description: 'Setup scoop and update PATH for GitHub Actions workflow on Windows environment.'
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+        iex (New-Object net.webclient).downloadstring('https://get.scoop.sh')
+        (Resolve-Path ~\scoop\shims).Path >> $Env:GITHUB_PATH
+      shell: pwsh
+

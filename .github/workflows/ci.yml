@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  pull_request:
+  schedule:
+    - cron:  0 20 1 * *
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [windows-latest, windows-2016]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - uses: MinoruSekine/setup-scoop@v1
+
+    - name: Confirm scoop working
+      run: |
+        scoop update
+        scoop checkup
+      shell: pwsh
