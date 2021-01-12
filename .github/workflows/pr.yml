@@ -1,0 +1,37 @@
+name: PR
+
+on:
+  pull_request:
+
+jobs:
+  default:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - uses: ./
+
+    - name: Confirm scoop working
+      shell: pwsh
+      run: scoop help
+
+  update_PATH_only:
+    runs-on: windows-2016
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - uses: ./
+      with:
+        install_scoop: 'false'
+        add_extras_bucket: 'false'
+        scoop_update: 'false'
+        scoop_checkup: 'false'
+        update_path: 'true'
+
+    - name: Confirm PATH and scoop is unavailable.
+      shell: pwsh
+      run: |
+        ($Env:Path -match "scoop")
+        if(Get-Command scoop -ErrorAction SilentlyContinue) {Write-Error "Unexpectedly found scoop." -ErrorAction Stop}

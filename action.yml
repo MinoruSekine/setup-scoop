@@ -4,33 +4,31 @@ inputs:
   install_scoop:
     description: 'Install scoop if true (default)'
     required: true
-    default: true
+    default: 'true'
+  add_extras_bucket:
+    description: 'Add extras bucket if true (default)'
+    required: true
+    default: 'false'
   scoop_update:
     description: 'Call scoop update if true (default)'
     required: true
-    default: true
+    default: 'true'
   scoop_checkup:
     description: 'Call scoop checkup if true (default)'
     required: true
-    default: false
+    default: 'false'
   update_path:
     description: 'Update environment variable PATH for workflow if true (default)'
     required: true
-    default: true
+    default: 'true'
 runs:
   using: "composite"
   steps:
-    - name: 'Install scoop'
+    - name: 'Setup scoop'
       shell: pwsh
-      if: inputs.install_scoop == true
       run: |
-        Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-        iex (New-Object net.webclient).downloadstring('https://get.scoop.sh')
-    - name: 'Install scoop'
-      shell: pwsh
-      if: inputs.update_path == true
-      run: |
-        Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-        iex (New-Object net.webclient).downloadstring('https://get.scoop.sh')
-        (Resolve-Path ~\scoop\shims).Path >> $Env:GITHUB_PATH
-
+        if('${{ inputs.install_scoop }}' -eq 'true') {iex (New-Object net.webclient).downloadstring('https://get.scoop.sh')}
+        if('${{ inputs.update_path }}' -eq 'true') {Join-Path (Resolve-Path ~).Path "scoop\shims" >> $Env:GITHUB_PATH}
+        if('${{ inputs.add_extras_bucket }}' -eq 'true') {scoop bucket add extras}
+        if('${{ inputs.scoop_update }}' -eq 'true') {scoop update}
+        if('${{ inputs.scoop_checkup }}' -eq 'true') {scoop checkup}

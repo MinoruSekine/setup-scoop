@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  test-run:
     strategy:
       matrix:
         os: [windows-latest, windows-2016]
