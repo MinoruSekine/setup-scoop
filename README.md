@@ -29,6 +29,11 @@
 - If `true`, `extras` bucket will be added
 - If `false` (default), it will not
 
+### `add_nonportable_bucket`
+
+- If `true`, `nonportable` bucket will be added
+- If `false` (default), it will not
+
 ### `scoop_update`
 
 - If `true` (default), `scoop update` will be processed after installation

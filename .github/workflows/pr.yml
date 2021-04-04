@@ -26,6 +26,7 @@ jobs:
       with:
         install_scoop: 'false'
         add_extras_bucket: 'false'
+        add_nonportable_bucket: 'false'
         scoop_update: 'false'
         scoop_checkup: 'false'
         update_path: 'true'
