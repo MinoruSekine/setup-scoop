@@ -9,6 +9,10 @@ inputs:
     description: 'Add extras bucket if true (default)'
     required: true
     default: 'false'
+  add_nonportable_bucket:
+    description: 'Add nonportable bucket if true (default)'
+    required: true
+    default: 'false'
   scoop_update:
     description: 'Call scoop update if true (default)'
     required: true
@@ -30,5 +34,6 @@ runs:
         if('${{ inputs.install_scoop }}' -eq 'true') {iex (New-Object net.webclient).downloadstring('https://get.scoop.sh')}
         if('${{ inputs.update_path }}' -eq 'true') {Join-Path (Resolve-Path ~).Path "scoop\shims" >> $Env:GITHUB_PATH}
         if('${{ inputs.add_extras_bucket }}' -eq 'true') {scoop bucket add extras}
+        if('${{ inputs.add_nonportable_bucket }}' -eq 'true') {scoop bucket add nonportable}
         if('${{ inputs.scoop_update }}' -eq 'true') {scoop update}
         if('${{ inputs.scoop_checkup }}' -eq 'true') {scoop checkup}

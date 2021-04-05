@@ -22,11 +22,16 @@
 
 - If `true` (default), `scoop` will be installed
 - If `false`, `scoop` will not be installed
-  - For example, it is unnecessary to install scoop if cached `~/scoop/` is recoverable
+  - For example, it is unnecessary to install scoop because cached `~/scoop/` will be recovered
 
 ### `add_extras_bucket`
 
 - If `true`, `extras` bucket will be added
+- If `false` (default), it will not
+
+### `add_nonportable_bucket`
+
+- If `true`, `nonportable` bucket will be added
 - If `false` (default), it will not
 
 ### `scoop_update`
@@ -42,4 +47,4 @@
 ### `update_path`
 
 - If `true` (default), path to `scoop` will be added into environment variable `PATH`
-- If `false`, `PATH` will not be updated
+- If `false`, environment variable `PATH` will not be updated
