@@ -6,7 +6,7 @@
 
 - Put codes like this into your workflow
 ```yaml
-      - uses: MinoruSekine/setup-scoop
+      - uses: MinoruSekine/setup-scoop@v1
 ```
 
 ## Parameters
