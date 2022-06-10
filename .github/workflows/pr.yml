@@ -5,10 +5,14 @@ on:
 
 jobs:
   default:
-    runs-on: windows-latest
+    strategy:
+      matrix:
+        os: [windows-latest, windows-2019]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
 
     - uses: ./
 
@@ -17,10 +21,14 @@ jobs:
       run: scoop help
 
   update_PATH_only:
-    runs-on: windows-2016
+    strategy:
+      matrix:
+        os: [windows-latest, windows-2019]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
 
     - uses: ./
       with:
