@@ -18,7 +18,34 @@ jobs:
 
     - name: Confirm scoop working
       shell: pwsh
-      run: scoop help
+      run: scoop bucket list
+
+    - name: Validate no additional buckets are available as default
+      shell: pwsh
+      run: |
+        $buckets = @("extras", "nonportable")
+        foreach($bucket in $buckets) {
+          if([bool](scoop bucket list | Select-String -Quiet $bucket)) {Write-Error "Unexpected `"${bucket}`" bucket is found." -ErrorAction Stop}
+        }
+
+  add_extras_bucket:
+    strategy:
+      matrix:
+        os: [windows-latest, windows-2019]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: ./
+      with:
+        add_extras_bucket: 'true'
+
+    - name: Validate extras bucket is available
+      shell: pwsh
+      run: |
+        if(-Not [bool](scoop bucket list | Select-String -Quiet "extras")) {Write-Error "extras bucket not found." -ErrorAction Stop}
 
   update_PATH_only:
     strategy:
