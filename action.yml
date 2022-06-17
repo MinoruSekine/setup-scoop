@@ -6,11 +6,11 @@ inputs:
     required: true
     default: 'true'
   add_extras_bucket:
-    description: 'Add extras bucket if true (default)'
+    description: 'Add extras bucket if true'
     required: true
     default: 'false'
   add_nonportable_bucket:
-    description: 'Add nonportable bucket if true (default)'
+    description: 'Add nonportable bucket if true'
     required: true
     default: 'false'
   scoop_update:
@@ -18,7 +18,7 @@ inputs:
     required: true
     default: 'true'
   scoop_checkup:
-    description: 'Call scoop checkup if true (default)'
+    description: 'Call scoop checkup if true'
     required: true
     default: 'false'
   update_path:
