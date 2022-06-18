@@ -1,7 +1,10 @@
-name: PR
+name: Validate @v2 compatibility
 
 on:
   pull_request:
+  schedule:
+    - cron:  0 8 * * 5
+  workflow_dispatch:
 
 jobs:
   default:
@@ -12,9 +15,14 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v2
+    - if: ${{ github.event_name == 'pull_request' }}
+      uses: actions/checkout@v2
 
-    - uses: ./
+    - if: ${{ github.event_name == 'pull_request' }}
+      uses: ./
+
+    - if: ${{ github.event_name != 'pull_request' }}
+      uses: MinoruSekine/setup-scoop@main
 
     - name: Confirm scoop working
       shell: pwsh
@@ -36,9 +44,16 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v2
+    - if: ${{ github.event_name == 'pull_request' }}
+      uses: actions/checkout@v2
 
-    - uses: ./
+    - if: ${{ github.event_name == 'pull_request' }}
+      uses: ./
+      with:
+        add_extras_bucket: 'true'
+
+    - if: ${{ github.event_name != 'pull_request' }}
+      uses: MinoruSekine/setup-scoop@main
       with:
         add_extras_bucket: 'true'
 
@@ -55,9 +70,21 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v2
+    - if: ${{ github.event_name == 'pull_request' }}
+      uses: actions/checkout@v2
 
-    - uses: ./
+    - if: ${{ github.event_name == 'pull_request' }}
+      uses: ./
+      with:
+        install_scoop: 'false'
+        add_extras_bucket: 'false'
+        add_nonportable_bucket: 'false'
+        scoop_update: 'false'
+        scoop_checkup: 'false'
+        update_path: 'true'
+
+    - if: ${{ github.event_name != 'pull_request' }}
+      uses: MinoruSekine/setup-scoop@main
       with:
         install_scoop: 'false'
         add_extras_bucket: 'false'
