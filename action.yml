@@ -6,11 +6,11 @@ inputs:
     required: true
     default: 'true'
   add_extras_bucket:
-    description: 'Add extras bucket if true'
+    description: 'Add extras bucket if true, this is obsoleted and use buckets: "extras"'
     required: true
     default: 'false'
   add_nonportable_bucket:
-    description: 'Add nonportable bucket if true'
+    description: 'Add nonportable bucket if true, this is obsoleted and use buckets: "nonportable"'
     required: true
     default: 'false'
   scoop_update:
@@ -25,6 +25,10 @@ inputs:
     description: 'Update environment variable PATH for workflow if true (default)'
     required: true
     default: 'true'
+  buckets:
+    description: 'Bucket(s) to add, delimit several buckets by white space'
+    required: false
+    default: ''
 runs:
   using: "composite"
   steps:
@@ -36,7 +40,20 @@ runs:
             .\install.ps1 -RunAsAdmin
         }
         if('${{ inputs.update_path }}' -eq 'true') {Join-Path (Resolve-Path ~).Path "scoop\shims" >> $Env:GITHUB_PATH}
-        if('${{ inputs.add_extras_bucket }}' -eq 'true') {scoop bucket add extras}
-        if('${{ inputs.add_nonportable_bucket }}' -eq 'true') {scoop bucket add nonportable}
+        Write-Host inputs.buckets ${{ inputs.buckets }}
+        $param_buckets_string = "${{ inputs.buckets }}"
+        Write-Host param_buckets_string $param_buckets_string
+        [string[]] $buckets = @()
+        if($param_buckets_string) {
+            $buckets = $param_buckets_string.Split(" ")
+        }
+        if('${{ inputs.add_extras_bucket }}' -eq 'true') {$buckets += "extras"}
+        if('${{ inputs.add_nonportable_bucket }}' -eq 'true') {$buckets += "nonportable"}
+        Write-Host buckets $buckets
+        foreach($bucket in $buckets) {
+            if ($bucket -inotmatch "^\w+$") {Write-Error "Illegal bucket(s) name `"$bucket`"." -ErrorAction Stop}
+            Write-Host bucket $bucket
+            scoop bucket add $bucket
+        }
         if('${{ inputs.scoop_update }}' -eq 'true') {scoop update}
         if('${{ inputs.scoop_checkup }}' -eq 'true') {scoop checkup}
