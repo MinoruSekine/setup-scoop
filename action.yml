@@ -57,3 +57,6 @@ runs:
         }
         if('${{ inputs.scoop_update }}' -eq 'true') {scoop update}
         if('${{ inputs.scoop_checkup }}' -eq 'true') {scoop checkup}
+        if('${{ inputs.install_scoop }}' -eq 'true' -Or $buckets.count -gt 0) {
+            scoop --version
+        }
