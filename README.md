@@ -14,7 +14,7 @@
 - Parameters can be specified by `with:` like this
 ```yaml
         with:
-          add_extras_bucket: 'true'
+          buckets: extras
           scoop_checkup: 'true'
 ```
 
@@ -28,11 +28,18 @@
 
 - If `true`, `extras` bucket will be added
 - If `false` (default), it will not
+- This parameter will be obsoleted in the future, use `buckets` instead in your new workflow(s)
 
 ### `add_nonportable_bucket`
 
 - If `true`, `nonportable` bucket will be added
 - If `false` (default), it will not
+- This parameter will be obsoleted in the future, use `buckets` instead in your new workflow(s)
+
+### `buckets`
+
+- Specify bucket(s) to add
+  - Delimit several buckets by white space like as `java games php`
 
 ### `scoop_update`
 
