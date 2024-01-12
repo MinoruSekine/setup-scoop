@@ -23,7 +23,7 @@ jobs:
       uses: ./
 
     - if: ${{ github.event_name != 'pull_request' }}
-      uses: MinoruSekine/setup-scoop@main
+      uses: MinoruSekine/setup-scoop@v2
 
     - name: Confirm scoop working
       shell: pwsh
@@ -55,7 +55,7 @@ jobs:
         add_extras_bucket: 'true'
 
     - if: ${{ github.event_name != 'pull_request' }}
-      uses: MinoruSekine/setup-scoop@main
+      uses: MinoruSekine/setup-scoop@v2
       with:
         add_extras_bucket: 'true'
 
@@ -82,7 +82,7 @@ jobs:
         add_nonportable_bucket: 'true'
 
     - if: ${{ github.event_name != 'pull_request' }}
-      uses: MinoruSekine/setup-scoop@main
+      uses: MinoruSekine/setup-scoop@v2
       with:
         add_nonportable_bucket: 'true'
 
@@ -109,7 +109,7 @@ jobs:
         buckets: java games php
 
     - if: ${{ github.event_name != 'pull_request' }}
-      uses: MinoruSekine/setup-scoop@main
+      uses: MinoruSekine/setup-scoop@v2
       with:
         buckets: java games php
 
@@ -140,7 +140,7 @@ jobs:
       continue-on-error: true
 
     - if: ${{ github.event_name != 'pull_request' }}
-      uses: MinoruSekine/setup-scoop@main
+      uses: MinoruSekine/setup-scoop@v2
       with:
         buckets: java -add
       continue-on-error: true
@@ -163,7 +163,7 @@ jobs:
         buckets: extras
 
     - if: ${{ github.event_name != 'pull_request' }}
-      uses: MinoruSekine/setup-scoop@main
+      uses: MinoruSekine/setup-scoop@v2
       with:
         buckets: extras
 
@@ -195,7 +195,7 @@ jobs:
         update_path: 'true'
 
     - if: ${{ github.event_name != 'pull_request' }}
-      uses: MinoruSekine/setup-scoop@main
+      uses: MinoruSekine/setup-scoop@v2
       with:
         install_scoop: 'false'
         add_extras_bucket: 'false'
