@@ -1,5 +1,8 @@
 name: 'Setup scoop'
-description: 'Setup scoop and update PATH for GitHub Actions workflow on Windows environment.'
+description: 'Integrate scoop command line installer into your workflow on Windows runner.'
+branding:
+  icon: 'hard-drive'
+  color: 'green'
 inputs:
   install_scoop:
     description: 'Install scoop if true (default)'
