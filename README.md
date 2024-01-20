@@ -55,3 +55,49 @@
 
 - If `true` (default), path to `scoop` will be added into environment variable `PATH`
 - If `false`, environment variable `PATH` will not be updated
+
+## Advanced usage
+
+### Sample to improve workflow performance with `actions/cache`
+- If cache is available, `install_scoop` will be `false`to skip installation and only `update_path` will be `true`
+- Include `packages_to_install` into cache seed to validate cache is including enough apps or not
+- Increment `cache_version` if cache should be expired without changing `packages_to_install`
+```yaml
+env:
+  packages_to_install: shellcheck
+  cache_version: v0
+  cache_hash_seed_file_path: './.github/workflows/cache_seed_file_for_scoop.txt'
+```
+(snipped)
+```yaml
+jobs:
+  build:
+    steps:
+    - name: Create cache seed file
+      run: echo ${{ env.packages_to_install }} >> ${{ env.cache_hash_seed_file_path }}
+
+    - name: Restore cache if available
+      id: restore_cache
+      uses: actions/cache@v3
+      with:
+        path: ${{ matrix.to_cache_dir }}
+        key: cache_version_${{ env.cache_version }}-${{ hashFiles(env.cache_hash_seed_file_path) }}
+
+    - name: Install scoop (Windows)
+      uses: MinoruSekine/setup-scoop@main
+      if: steps.restore_cache.outputs.cache-hit != 'true'
+      with:
+        install_scoop: 'true'
+        add_extras_bucket: 'true'
+        scoop_update: 'true'
+        update_path: 'true'
+
+    - name: Setup scoop PATH (Windows)
+      uses: MinoruSekine/setup-scoop@main
+      if: steps.restore_cache.outputs.cache-hit == 'true'
+      with:
+        install_scoop: 'false'
+        add_extras_bucket: 'false'
+        scoop_update: 'false'
+        update_path: 'true'
+```
