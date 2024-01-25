@@ -32,6 +32,10 @@ inputs:
     description: 'Bucket(s) to add, delimit several buckets by white space'
     required: false
     default: ''
+  run_as_admin:
+    description: 'Install scoop with `-RunAsAdmin` or not'
+    required: false
+    default: true
 runs:
   using: "composite"
   steps:
@@ -40,7 +44,11 @@ runs:
       run: |
         if('${{ inputs.install_scoop }}' -eq 'true') {
             iwr get.scoop.sh -outfile 'install.ps1'
-            .\install.ps1 -RunAsAdmin
+            if('${{ inputs.run_as_admin }}' -eq 'true') {
+                .\install.ps1 -RunAsAdmin
+            } else {
+                .\install.ps1
+            }
         }
         if('${{ inputs.update_path }}' -eq 'true') {Join-Path (Resolve-Path ~).Path "scoop\shims" >> $Env:GITHUB_PATH}
         Write-Host inputs.buckets ${{ inputs.buckets }}
