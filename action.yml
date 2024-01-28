@@ -53,10 +53,15 @@ runs:
         if('${{ inputs.add_extras_bucket }}' -eq 'true') {$buckets += "extras"}
         if('${{ inputs.add_nonportable_bucket }}' -eq 'true') {$buckets += "nonportable"}
         Write-Host buckets $buckets
-        foreach($bucket in $buckets) {
-            if ($bucket -inotmatch "^\w+$") {Write-Error "Illegal bucket(s) name `"$bucket`"." -ErrorAction Stop}
-            Write-Host bucket $bucket
-            scoop bucket add $bucket
+        if($buckets.count -ge 1) {
+            $known_buckets=scoop bucket known
+            foreach($bucket in $buckets) {
+                if($null -eq ($known_buckets | Where-Object {$_ -eq $bucket})) {
+                    Write-Error "Bucket `"$bucket`" is unknown." -ErrorAction Stop
+                }
+                Write-Host bucket $bucket
+                scoop bucket add $bucket
+            }
         }
         if('${{ inputs.scoop_update }}' -eq 'true') {scoop update}
         if('${{ inputs.scoop_checkup }}' -eq 'true') {scoop checkup}
