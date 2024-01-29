@@ -172,6 +172,30 @@ jobs:
       run: |
         if(-Not [bool](scoop bucket list | Select-String -Quiet "extras")) {Write-Error "extras bucket not found." -ErrorAction Stop}
 
+  refuse_unknown_bucket:
+    strategy:
+      matrix:
+        os: [windows-latest, windows-2019]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - if: ${{ github.event_name == 'pull_request' }}
+      uses: actions/checkout@v4
+
+    - if: ${{ github.event_name == 'pull_request' }}
+      name: Run actions locally
+      uses: ./
+      with:
+        buckets: unknown
+      continue-on-error: true
+
+    - if: ${{ github.event_name != 'pull_request' }}
+      uses: MinoruSekine/setup-scoop@main
+      with:
+        buckets: unknown
+      continue-on-error: true
+
   update_PATH_only:
     strategy:
       matrix:
