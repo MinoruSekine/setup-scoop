@@ -233,3 +233,28 @@ jobs:
       run: |
         ($Env:Path -match "scoop")
         if(Get-Command scoop -ErrorAction SilentlyContinue) {Write-Error "Unexpectedly found scoop." -ErrorAction Stop}
+
+
+  GitHub_default_runner_without_RunAsAdmin:
+    strategy:
+      matrix:
+        os: [windows-latest, windows-2019]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - if: ${{ github.event_name == 'pull_request' }}
+      uses: actions/checkout@v4
+
+    - if: ${{ github.event_name == 'pull_request' }}
+      name: Run actions locally
+      uses: ./
+      with:
+        run_as_admin: false
+      continue-on-error: true
+
+    - if: ${{ github.event_name != 'pull_request' }}
+      uses: MinoruSekine/setup-scoop@main
+      with:
+        run_as_admin: false
+      continue-on-error: true
