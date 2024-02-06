@@ -1,0 +1,46 @@
+name: update_path
+
+on:
+  pull_request:
+  schedule:
+    - cron:  0 8 * * 5
+  workflow_dispatch:
+
+jobs:
+  update_PATH_only:
+    strategy:
+      matrix:
+        os: [windows-latest, windows-2019]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - if: ${{ github.event_name == 'pull_request' }}
+      uses: actions/checkout@v4
+
+    - if: ${{ github.event_name == 'pull_request' }}
+      name: Run actions locally
+      uses: ./
+      with:
+        install_scoop: 'false'
+        add_extras_bucket: 'false'
+        add_nonportable_bucket: 'false'
+        scoop_update: 'false'
+        scoop_checkup: 'false'
+        update_path: 'true'
+
+    - if: ${{ github.event_name != 'pull_request' }}
+      uses: MinoruSekine/setup-scoop@main
+      with:
+        install_scoop: 'false'
+        add_extras_bucket: 'false'
+        add_nonportable_bucket: 'false'
+        scoop_update: 'false'
+        scoop_checkup: 'false'
+        update_path: 'true'
+
+    - name: Confirm PATH and scoop is unavailable.
+      shell: pwsh
+      run: |
+        ($Env:Path -match "scoop")
+        if(Get-Command scoop -ErrorAction SilentlyContinue) {Write-Error "Unexpectedly found scoop." -ErrorAction Stop}

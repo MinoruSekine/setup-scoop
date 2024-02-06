@@ -1,0 +1,113 @@
+name: Buckets
+
+on:
+  pull_request:
+  schedule:
+    - cron:  0 8 * * 5
+  workflow_dispatch:
+
+jobs:
+  add_multiple_buckets_at_once:
+    strategy:
+      matrix:
+        os: [windows-latest, windows-2019]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - if: ${{ github.event_name == 'pull_request' }}
+      uses: actions/checkout@v4
+
+    - if: ${{ github.event_name == 'pull_request' }}
+      name: Run actions locally
+      uses: ./
+      with:
+        buckets: java games php
+
+    - if: ${{ github.event_name != 'pull_request' }}
+      uses: MinoruSekine/setup-scoop@main
+      with:
+        buckets: java games php
+
+    - name: Validate nonportable bucket is available
+      shell: pwsh
+      run: |
+        $buckets = @("java", "games", "php")
+        foreach($bucket in $buckets) {
+          if(-Not [bool](scoop bucket list | Select-String -Quiet $bucket)) {Write-Error "`"$bucket`" bucket not found." -ErrorAction Stop}
+        }
+
+  illegal_bucket_name:
+    strategy:
+      matrix:
+        os: [windows-latest, windows-2019]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - if: ${{ github.event_name == 'pull_request' }}
+      uses: actions/checkout@v4
+
+    - if: ${{ github.event_name == 'pull_request' }}
+      name: Run actions locally
+      uses: ./
+      with:
+        buckets: java -add
+      continue-on-error: true
+
+    - if: ${{ github.event_name != 'pull_request' }}
+      uses: MinoruSekine/setup-scoop@main
+      with:
+        buckets: java -add
+      continue-on-error: true
+
+  add_extras_bucket_by_buckets_parameter:
+    strategy:
+      matrix:
+        os: [windows-latest, windows-2019]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - if: ${{ github.event_name == 'pull_request' }}
+      uses: actions/checkout@v4
+
+    - if: ${{ github.event_name == 'pull_request' }}
+      name: Run actions locally
+      uses: ./
+      with:
+        buckets: extras
+
+    - if: ${{ github.event_name != 'pull_request' }}
+      uses: MinoruSekine/setup-scoop@main
+      with:
+        buckets: extras
+
+    - name: Validate extras bucket is available
+      shell: pwsh
+      run: |
+        if(-Not [bool](scoop bucket list | Select-String -Quiet "extras")) {Write-Error "extras bucket not found." -ErrorAction Stop}
+
+  refuse_unknown_bucket:
+    strategy:
+      matrix:
+        os: [windows-latest, windows-2019]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - if: ${{ github.event_name == 'pull_request' }}
+      uses: actions/checkout@v4
+
+    - if: ${{ github.event_name == 'pull_request' }}
+      name: Run actions locally
+      uses: ./
+      with:
+        buckets: unknown
+      continue-on-error: true
+
+    - if: ${{ github.event_name != 'pull_request' }}
+      uses: MinoruSekine/setup-scoop@main
+      with:
+        buckets: unknown
+      continue-on-error: true

@@ -1,0 +1,62 @@
+name: Obsoleted parameters
+
+on:
+  pull_request:
+  schedule:
+    - cron:  0 8 * * 5
+  workflow_dispatch:
+
+jobs:
+  add_extras_bucket:
+    strategy:
+      matrix:
+        os: [windows-latest, windows-2019]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - if: ${{ github.event_name == 'pull_request' }}
+      uses: actions/checkout@v4
+
+    - if: ${{ github.event_name == 'pull_request' }}
+      name: Run actions locally
+      uses: ./
+      with:
+        add_extras_bucket: 'true'
+
+    - if: ${{ github.event_name != 'pull_request' }}
+      uses: MinoruSekine/setup-scoop@main
+      with:
+        add_extras_bucket: 'true'
+
+    - name: Validate extras bucket is available
+      shell: pwsh
+      run: |
+        if(-Not [bool](scoop bucket list | Select-String -Quiet "extras")) {Write-Error "extras bucket not found." -ErrorAction Stop}
+
+  add_nonportable_bucket:
+    strategy:
+      matrix:
+        os: [windows-latest, windows-2019]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - if: ${{ github.event_name == 'pull_request' }}
+      uses: actions/checkout@v4
+
+    - if: ${{ github.event_name == 'pull_request' }}
+      name: Run actions locally
+      uses: ./
+      with:
+        add_nonportable_bucket: 'true'
+
+    - if: ${{ github.event_name != 'pull_request' }}
+      uses: MinoruSekine/setup-scoop@main
+      with:
+        add_nonportable_bucket: 'true'
+
+    - name: Validate nonportable bucket is available
+      shell: pwsh
+      run: |
+        if(-Not [bool](scoop bucket list | Select-String -Quiet "nonportable")) {Write-Error "nonportable bucket not found." -ErrorAction Stop}
