@@ -34,13 +34,13 @@
 
 - If `true`, `extras` bucket will be added
 - If `false` (default), it will not
-- This parameter will be obsoleted in the future, use `buckets` instead in your new workflow(s)
+- This parameter will be removed on `@v4`, use `buckets` instead in your new workflow(s)
 
 ### `add_nonportable_bucket`
 
 - If `true`, `nonportable` bucket will be added
 - If `false` (default), it will not
-- This parameter will be obsoleted in the future, use `buckets` instead in your new workflow(s)
+- This parameter will be removed on `@v4`, use `buckets` instead in your new workflow(s)
 
 ### `buckets`
 
