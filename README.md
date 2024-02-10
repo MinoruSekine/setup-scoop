@@ -46,6 +46,7 @@
 
 - Specify bucket(s) to add
   - Delimit several buckets by white space like as `java games php`
+  - Bucket(s) specified by this parameter must be "known" buckets, you can confirm them by `scoop bucket known` command
 
 ### `scoop_update`
 
