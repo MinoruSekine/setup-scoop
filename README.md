@@ -24,6 +24,12 @@
 - If `false`, `scoop` will not be installed
   - For example, it is unnecessary to install scoop because cached `~/scoop/` will be recovered
 
+### `run_as_admin`
+
+- If `true` (default), `scoop` will be installed with option `-RunAsAdmin`
+  - Windows Runners provided by GitHub may need this, because currently they run with Administrator privilege
+- If `false`, `scoop` will be installed without option `-RunAsAdmin`
+
 ### `add_extras_bucket`
 
 - If `true`, `extras` bucket will be added
