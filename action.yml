@@ -9,11 +9,11 @@ inputs:
     required: true
     default: 'true'
   add_extras_bucket:
-    description: 'Add extras bucket if true, this is obsoleted and use buckets: "extras"'
+    description: 'This is obsoleted and use `buckets: extras`'
     required: true
     default: 'false'
   add_nonportable_bucket:
-    description: 'Add nonportable bucket if true, this is obsoleted and use buckets: "nonportable"'
+    description: 'This is obsoleted and use `buckets: nonportable`'
     required: true
     default: 'false'
   scoop_update:
@@ -58,8 +58,12 @@ runs:
         if($param_buckets_string) {
             $buckets = $param_buckets_string.Split(" ")
         }
-        if('${{ inputs.add_extras_bucket }}' -eq 'true') {$buckets += "extras"}
-        if('${{ inputs.add_nonportable_bucket }}' -eq 'true') {$buckets += "nonportable"}
+        if('${{ inputs.add_extras_bucket }}' -eq 'true') {
+            Write-Error '`add_extras_bucket` is now obsoleted, use `buckets` instead.' -ErrorAction Stop
+        }
+        if('${{ inputs.add_nonportable_bucket }}' -eq 'true') {
+            Write-Error '`add_nonportable_bucket` is now obsoleted, use `buckets` instead.' -ErrorAction Stop
+        }
         Write-Host buckets $buckets
         if($buckets.count -ge 1) {
             $known_buckets=scoop bucket known

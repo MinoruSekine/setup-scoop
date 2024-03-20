@@ -30,22 +30,10 @@
   - Windows Runners provided by GitHub may need this, because currently they run with Administrator privilege
 - If `false`, `scoop` will be installed without option `-RunAsAdmin`
 
-### `add_extras_bucket`
-
-- If `true`, `extras` bucket will be added
-- If `false` (default), it will not
-- This parameter will be removed on `@v4`, use `buckets` instead in your new workflow(s)
-
-### `add_nonportable_bucket`
-
-- If `true`, `nonportable` bucket will be added
-- If `false` (default), it will not
-- This parameter will be removed on `@v4`, use `buckets` instead in your new workflow(s)
-
 ### `buckets`
 
 - Specify bucket(s) to add
-  - Delimit several buckets by white space like as `java games php`
+  - Delimit several buckets by white space like as `extras nonportable games`
   - Bucket(s) specified by this parameter must be "known" buckets, you can confirm them by `scoop bucket known` command
 
 ### `scoop_update`

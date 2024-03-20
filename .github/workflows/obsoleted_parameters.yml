@@ -23,16 +23,18 @@ jobs:
       uses: ./
       with:
         add_extras_bucket: 'true'
+      continue-on-error: true
 
     - if: ${{ github.event_name != 'pull_request' }}
       uses: MinoruSekine/setup-scoop@main
       with:
         add_extras_bucket: 'true'
+      continue-on-error: true
 
-    - name: Validate extras bucket is available
+    - name: Validate extras bucket is not available
       shell: pwsh
       run: |
-        if(-Not [bool](scoop bucket list | Select-String -Quiet "extras")) {Write-Error "extras bucket not found." -ErrorAction Stop}
+        if([bool](scoop bucket list | Select-String -Quiet "extras")) {Write-Error "Unexepectedly extras bucket is found." -ErrorAction Stop}
 
   add_nonportable_bucket:
     strategy:
@@ -50,13 +52,15 @@ jobs:
       uses: ./
       with:
         add_nonportable_bucket: 'true'
+      continue-on-error: true
 
     - if: ${{ github.event_name != 'pull_request' }}
       uses: MinoruSekine/setup-scoop@main
       with:
         add_nonportable_bucket: 'true'
+      continue-on-error: true
 
-    - name: Validate nonportable bucket is available
+    - name: Validate nonportable bucket is not available
       shell: pwsh
       run: |
-        if(-Not [bool](scoop bucket list | Select-String -Quiet "nonportable")) {Write-Error "nonportable bucket not found." -ErrorAction Stop}
+        if([bool](scoop bucket list | Select-String -Quiet "nonportable")) {Write-Error "Unexpectedly nonportable bucket is found." -ErrorAction Stop}
