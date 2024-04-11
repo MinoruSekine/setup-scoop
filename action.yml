@@ -36,6 +36,10 @@ inputs:
     description: 'Install scoop with `-RunAsAdmin` or not'
     required: false
     default: true
+  apps:
+    description: 'Apps to be installed'
+    required: false
+    default: ''
 runs:
   using: "composite"
   steps:
@@ -79,4 +83,17 @@ runs:
         if('${{ inputs.scoop_checkup }}' -eq 'true') {scoop checkup}
         if('${{ inputs.install_scoop }}' -eq 'true' -Or $buckets.count -gt 0) {
             scoop --version
+        }
+        $param_apps_string = "${{ inputs.apps }}"
+        Write-Host param_apps_string $param_apps_string
+        [string[]] $apps = @()
+        if ($param_apps_string) {
+            $apps = $param_apps_string.Split(" ")
+        }
+        foreach($app in $apps) {
+            Write-Host app $app
+            if ($app -inotmatch "^\w[\w/.@]+$") {
+                Write-Error "Illegal app name `"$app`"." -ErrorAction Stop
+            }
+            scoop install $app
         }
