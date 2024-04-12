@@ -9,6 +9,11 @@
       - uses: MinoruSekine/setup-scoop@v3
 ```
 
+## Supported environments
+
+- `windows-latest`
+- `windows-2019`
+
 ## Parameters
 
 - Parameters can be specified by `with:` like this
