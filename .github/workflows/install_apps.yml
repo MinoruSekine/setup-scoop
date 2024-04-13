@@ -1,0 +1,64 @@
+name: Install apps
+
+on:
+  pull_request:
+  schedule:
+    - cron:  0 8 * * 5
+  workflow_dispatch:
+
+jobs:
+  install_app:
+    strategy:
+      matrix:
+        os: [windows-latest, windows-2019]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - if: ${{ github.event_name == 'pull_request' }}
+      uses: actions/checkout@v4
+
+    - if: ${{ github.event_name == 'pull_request' }}
+      name: Run actions locally
+      uses: ./
+      with:
+        buckets: extras
+        apps: plantuml doxygen
+
+    - if: ${{ github.event_name != 'pull_request' }}
+      uses: MinoruSekine/setup-scoop@main
+      with:
+        buckets: extras
+        apps: plantuml doxygen
+
+    - name: Validate apps are available or not
+      shell: pwsh
+      run: |
+        gcm plantuml
+        gcm doxygen
+
+  injection_attack_prevention:
+    strategy:
+      matrix:
+        os: [windows-latest, windows-2019]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - if: ${{ github.event_name == 'pull_request' }}
+      uses: actions/checkout@v4
+
+    - if: ${{ github.event_name == 'pull_request' }}
+      name: Run actions locally
+      uses: ./
+      with:
+        apps: -foobar
+      continue-on-error: true
+
+    - if: ${{ github.event_name != 'pull_request' }}
+      uses: MinoruSekine/setup-scoop@main
+      with:
+        buckets: extras
+        apps: -foobar
+      continue-on-error: true
+

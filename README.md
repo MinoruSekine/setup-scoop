@@ -9,6 +9,11 @@
       - uses: MinoruSekine/setup-scoop@v3
 ```
 
+## Supported environments
+
+- `windows-latest`
+- `windows-2019`
+
 ## Parameters
 
 - Parameters can be specified by `with:` like this
@@ -35,6 +40,11 @@
 - Specify bucket(s) to add
   - Delimit several buckets by white space like as `extras nonportable games`
   - Bucket(s) specified by this parameter must be "known" buckets, you can confirm them by `scoop bucket known` command
+
+### `apps`
+
+- Specify application(s) to add
+  - Delimit several applications by white space like as `plantuml doxygen`
 
 ### `scoop_update`
 
@@ -79,7 +89,7 @@ jobs:
         key: cache_version_${{ env.cache_version }}-${{ hashFiles(env.cache_hash_seed_file_path) }}
 
     - name: Install scoop (Windows)
-      uses: MinoruSekine/setup-scoop@main
+      uses: MinoruSekine/setup-scoop@v3
       if: steps.restore_cache.outputs.cache-hit != 'true'
       with:
         install_scoop: 'true'
@@ -88,7 +98,7 @@ jobs:
         update_path: 'true'
 
     - name: Setup scoop PATH (Windows)
-      uses: MinoruSekine/setup-scoop@main
+      uses: MinoruSekine/setup-scoop@v3
       if: steps.restore_cache.outputs.cache-hit == 'true'
       with:
         install_scoop: 'false'
