@@ -83,7 +83,7 @@ jobs:
 
     - name: Restore cache if available
       id: restore_cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ matrix.to_cache_dir }}
         key: cache_version_${{ env.cache_version }}-${{ hashFiles(env.cache_hash_seed_file_path) }}
