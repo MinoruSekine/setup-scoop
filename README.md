@@ -93,7 +93,7 @@ jobs:
       if: steps.restore_cache.outputs.cache-hit != 'true'
       with:
         install_scoop: 'true'
-        add_extras_bucket: 'true'
+        buckets: extras
         scoop_update: 'true'
         update_path: 'true'
 
@@ -102,7 +102,6 @@ jobs:
       if: steps.restore_cache.outputs.cache-hit == 'true'
       with:
         install_scoop: 'false'
-        add_extras_bucket: 'false'
         scoop_update: 'false'
         update_path: 'true'
 ```
