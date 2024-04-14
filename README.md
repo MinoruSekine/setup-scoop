@@ -83,7 +83,7 @@ jobs:
 
     - name: Restore cache if available
       id: restore_cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ matrix.to_cache_dir }}
         key: cache_version_${{ env.cache_version }}-${{ hashFiles(env.cache_hash_seed_file_path) }}
@@ -93,7 +93,7 @@ jobs:
       if: steps.restore_cache.outputs.cache-hit != 'true'
       with:
         install_scoop: 'true'
-        add_extras_bucket: 'true'
+        buckets: extras
         scoop_update: 'true'
         update_path: 'true'
 
@@ -102,7 +102,6 @@ jobs:
       if: steps.restore_cache.outputs.cache-hit == 'true'
       with:
         install_scoop: 'false'
-        add_extras_bucket: 'false'
         scoop_update: 'false'
         update_path: 'true'
 ```
