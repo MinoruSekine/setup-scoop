@@ -64,7 +64,7 @@
 ## Advanced usage
 
 ### Sample to improve workflow performance with `actions/cache`
-- If cache is available, `install_scoop` will be `false`to skip installation and only `update_path` will be `true`
+- If cache is available, `install_scoop` will be `false` to skip installation and only `update_path` will be `true`
 - Include `packages_to_install` into cache seed to validate cache is including enough apps or not
 - Increment `cache_version` if cache should be expired without changing `packages_to_install`
 ```yaml
