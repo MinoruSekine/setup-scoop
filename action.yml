@@ -47,53 +47,29 @@ runs:
       shell: pwsh
       run: |
         if('${{ inputs.install_scoop }}' -eq 'true') {
-            iwr get.scoop.sh -outfile 'install.ps1'
             if('${{ inputs.run_as_admin }}' -eq 'true') {
-                .\install.ps1 -RunAsAdmin
+                .\scripts\install_scoop.ps1 -RunAsAdmin
             } else {
-                .\install.ps1
+                .\scripts\install_scoop.ps1
             }
+            scoop --version
         }
         if('${{ inputs.update_path }}' -eq 'true') {Join-Path (Resolve-Path ~).Path "scoop\shims" >> $Env:GITHUB_PATH}
-        Write-Host inputs.buckets ${{ inputs.buckets }}
-        $param_buckets_string = "${{ inputs.buckets }}"
-        Write-Host param_buckets_string $param_buckets_string
-        [string[]] $buckets = @()
-        if($param_buckets_string) {
-            $buckets = $param_buckets_string.Split(" ")
-        }
         if('${{ inputs.add_extras_bucket }}' -eq 'true') {
             Write-Error '`add_extras_bucket` is now obsoleted, use `buckets` instead.' -ErrorAction Stop
         }
         if('${{ inputs.add_nonportable_bucket }}' -eq 'true') {
             Write-Error '`add_nonportable_bucket` is now obsoleted, use `buckets` instead.' -ErrorAction Stop
         }
-        Write-Host buckets $buckets
-        if($buckets.count -ge 1) {
-            $known_buckets=scoop bucket known
-            foreach($bucket in $buckets) {
-                if($null -eq ($known_buckets | Where-Object {$_ -eq $bucket})) {
-                    Write-Error "Bucket `"$bucket`" is unknown." -ErrorAction Stop
-                }
-                Write-Host bucket $bucket
-                scoop bucket add $bucket
-            }
+        Write-Host inputs.buckets ${{ inputs.buckets }}
+        $param_buckets_string = "${{ inputs.buckets }}"
+        if ($param_buckets_string) {
+            .\scripts\add_buckets.ps1 "$param_buckets_string"
         }
         if('${{ inputs.scoop_update }}' -eq 'true') {scoop update}
         if('${{ inputs.scoop_checkup }}' -eq 'true') {scoop checkup}
-        if('${{ inputs.install_scoop }}' -eq 'true' -Or $buckets.count -gt 0) {
-            scoop --version
-        }
+        Write-Host inputs.apps ${{ inputs.buckets }}
         $param_apps_string = "${{ inputs.apps }}"
-        Write-Host param_apps_string $param_apps_string
-        [string[]] $apps = @()
         if ($param_apps_string) {
-            $apps = $param_apps_string.Split(" ")
-        }
-        foreach($app in $apps) {
-            Write-Host app $app
-            if ($app -inotmatch "^\w[\w/.@]+$") {
-                Write-Error "Illegal app name `"$app`"." -ErrorAction Stop
-            }
-            scoop install $app
+            .\scripts\install_apps.ps1 "$param_apps_string"
         }
