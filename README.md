@@ -1,12 +1,18 @@
 # setup-scoop
 
-- `setup-scoop` action installs `scoop` and update `PATH` for GitHub Actions workflow on Windows environment.
+- `setup-scoop` action provides functions below
+  - Install `scoop` to your Windows runner
+  - Update `PATH` environment variable
+  - Install applications by `scoop`
 
 ## Sample usage
 
-- Put codes like this into your workflow
+- If you want to install "Doxygen" and "PlantUML", put codes like this into your workflow YAML
 ```yaml
       - uses: MinoruSekine/setup-scoop@v4
+        with:
+          buckets: extras
+          apps: doxygen plantuml
 ```
 
 ## Supported environments
