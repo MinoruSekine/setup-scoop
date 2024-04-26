@@ -100,6 +100,7 @@ jobs:
       with:
         install_scoop: 'true'
         buckets: extras
+        apps: ${{ env.packages_to_install }}
         scoop_update: 'true'
         update_path: 'true'
 
