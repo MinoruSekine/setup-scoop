@@ -1,5 +1,4 @@
 param([switch]$RunAsAdmin)
-Write-Output $RunAsAdmin
 if ($RunAsAdmin) {
     iex "& {$(irm get.scoop.sh)} -RunAsAdmin"
 } else {
