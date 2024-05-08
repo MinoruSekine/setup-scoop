@@ -68,7 +68,7 @@ runs:
         }
         if('${{ inputs.scoop_update }}' -eq 'true') {scoop update}
         if('${{ inputs.scoop_checkup }}' -eq 'true') {scoop checkup}
-        Write-Host inputs.apps ${{ inputs.buckets }}
+        Write-Host inputs.apps ${{ inputs.apps }}
         $param_apps_string = "${{ inputs.apps }}"
         if ($param_apps_string) {
             .\scripts\install_apps.ps1 "$param_apps_string"
