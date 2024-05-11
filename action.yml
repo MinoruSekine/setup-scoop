@@ -48,9 +48,9 @@ runs:
       run: |
         if('${{ inputs.install_scoop }}' -eq 'true') {
             if('${{ inputs.run_as_admin }}' -eq 'true') {
-                .\scripts\install_scoop.ps1 -RunAsAdmin
+                powershell -NonInteractive -NoProfile -ExecutionPolicy Unrestricted .\scripts\install_scoop.ps1 -RunAsAdmin
             } else {
-                .\scripts\install_scoop.ps1
+                powershell -NonInteractive -NoProfile -ExecutionPolicy Unrestricted .\scripts\install_scoop.ps1
             }
             scoop --version
         }
@@ -64,12 +64,12 @@ runs:
         Write-Host 'setup-scoop: inputs.buckets ${{ inputs.buckets }}'
         $param_buckets_string = "${{ inputs.buckets }}"
         if ($param_buckets_string) {
-            .\scripts\add_buckets.ps1 "$param_buckets_string"
+            powershell -NonInteractive -NoProfile -ExecutionPolicy Unrestricted .\scripts\add_buckets.ps1 "$param_buckets_string"
         }
         if('${{ inputs.scoop_update }}' -eq 'true') {scoop update}
         if('${{ inputs.scoop_checkup }}' -eq 'true') {scoop checkup}
         Write-Host 'setup-scoop: inputs.apps ${{ inputs.apps }}'
         $param_apps_string = "${{ inputs.apps }}"
         if ($param_apps_string) {
-            .\scripts\install_apps.ps1 "$param_apps_string"
+            powershell -NonInteractive -NoProfile -ExecutionPolicy Unrestricted .\scripts\install_apps.ps1 "$param_apps_string"
         }
