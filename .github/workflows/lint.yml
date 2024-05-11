@@ -1,0 +1,19 @@
+name: lint
+
+on:
+  pull_request:
+
+jobs:
+  PSScriptAnalyzer:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Run PSScriptAnalyzer
+        uses: microsoft/psscriptanalyzer-action@v1.0
+        with:
+          path: .\scripts\
+          recurse: true
+          output: results.sarif
