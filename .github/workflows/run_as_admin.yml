@@ -2,6 +2,9 @@ name: run_as_admin
 
 on:
   pull_request:
+  push:
+    branches:
+      - main
   schedule:
     - cron:  0 8 * * 5
   workflow_dispatch:
