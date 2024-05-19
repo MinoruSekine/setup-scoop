@@ -6,7 +6,7 @@ on:
     branches:
       - main
   schedule:
-    - cron:  0 8 * * 5
+    - cron:  0 8 * * 1
   workflow_dispatch:
 
 jobs:
@@ -27,8 +27,13 @@ jobs:
       with:
         buckets: java games php
 
-    - if: ${{ github.event_name != 'pull_request' }}
+    - if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' }}
       uses: MinoruSekine/setup-scoop@main
+      with:
+        buckets: java games php
+
+    - if: ${{ github.event_name == 'schedule' }}
+      uses: MinoruSekine/setup-scoop@v4
       with:
         buckets: java games php
 
@@ -58,8 +63,14 @@ jobs:
         buckets: java -add
       continue-on-error: true
 
-    - if: ${{ github.event_name != 'pull_request' }}
+    - if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' }}
       uses: MinoruSekine/setup-scoop@main
+      with:
+        buckets: java -add
+      continue-on-error: true
+
+    - if: ${{ github.event_name == 'schedule' }}
+      uses: MinoruSekine/setup-scoop@v4
       with:
         buckets: java -add
       continue-on-error: true
@@ -81,8 +92,13 @@ jobs:
       with:
         buckets: extras
 
-    - if: ${{ github.event_name != 'pull_request' }}
+    - if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' }}
       uses: MinoruSekine/setup-scoop@main
+      with:
+        buckets: extras
+
+    - if: ${{ github.event_name == 'schedule' }}
+      uses: MinoruSekine/setup-scoop@v4
       with:
         buckets: extras
 
@@ -109,8 +125,14 @@ jobs:
         buckets: unknown
       continue-on-error: true
 
-    - if: ${{ github.event_name != 'pull_request' }}
+    - if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' }}
       uses: MinoruSekine/setup-scoop@main
+      with:
+        buckets: unknown
+      continue-on-error: true
+
+    - if: ${{ github.event_name == 'schedule' }}
+      uses: MinoruSekine/setup-scoop@v4
       with:
         buckets: unknown
       continue-on-error: true
