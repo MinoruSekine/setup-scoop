@@ -32,8 +32,18 @@ jobs:
         scoop_checkup: 'false'
         update_path: 'true'
 
-    - if: ${{ github.event_name != 'pull_request' }}
+    - if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
       uses: MinoruSekine/setup-scoop@main
+      with:
+        install_scoop: 'false'
+        add_extras_bucket: 'false'
+        add_nonportable_bucket: 'false'
+        scoop_update: 'false'
+        scoop_checkup: 'false'
+        update_path: 'true'
+
+    - if: ${{ github.event_name == 'schedule' }}
+      uses: MinoruSekine/setup-scoop@v4
       with:
         install_scoop: 'false'
         add_extras_bucket: 'false'
