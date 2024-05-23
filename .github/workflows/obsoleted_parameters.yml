@@ -6,7 +6,7 @@ on:
     branches:
       - main
   schedule:
-    - cron:  0 8 * * 1
+    - cron: 0 8 * * 1
   workflow_dispatch:
 
 jobs:
@@ -18,32 +18,36 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - if: ${{ github.event_name == 'pull_request' }}
-      uses: actions/checkout@v4
+      - if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/checkout@v4
 
-    - if: ${{ github.event_name == 'pull_request' }}
-      name: Run actions locally
-      uses: ./
-      with:
-        add_extras_bucket: 'true'
-      continue-on-error: true
+      - if: ${{ github.event_name == 'pull_request' }}
+        name: Run actions locally
+        uses: ./
+        with:
+          add_extras_bucket: 'true'
+        continue-on-error: true
 
-    - if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
-      uses: MinoruSekine/setup-scoop@main
-      with:
-        add_extras_bucket: 'true'
-      continue-on-error: true
+      - if: >
+          ${{ github.event_name == 'push'
+          || github.event_name == 'workflow_dispatch' }}
+        uses: MinoruSekine/setup-scoop@main
+        with:
+          add_extras_bucket: 'true'
+        continue-on-error: true
 
-    - if: ${{ github.event_name == 'schedule' }}
-      uses: MinoruSekine/setup-scoop@v4
-      with:
-        add_extras_bucket: 'true'
-      continue-on-error: true
+      - if: ${{ github.event_name == 'schedule' }}
+        uses: MinoruSekine/setup-scoop@v4
+        with:
+          add_extras_bucket: 'true'
+        continue-on-error: true
 
-    - name: Validate extras bucket is not available
-      shell: pwsh
-      run: |
-        if([bool](scoop bucket list | Select-String -Quiet "extras")) {Write-Error "Unexepectedly extras bucket is found." -ErrorAction Stop}
+      - name: Validate extras bucket is not available
+        shell: pwsh
+        run: |
+          if([bool](scoop bucket list | Select-String -Quiet "extras")) {
+            Write-Error "Unexepected extras bucket found." -ErrorAction Stop
+          }
 
   add_nonportable_bucket:
     strategy:
@@ -53,29 +57,33 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - if: ${{ github.event_name == 'pull_request' }}
-      uses: actions/checkout@v4
+      - if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/checkout@v4
 
-    - if: ${{ github.event_name == 'pull_request' }}
-      name: Run actions locally
-      uses: ./
-      with:
-        add_nonportable_bucket: 'true'
-      continue-on-error: true
+      - if: ${{ github.event_name == 'pull_request' }}
+        name: Run actions locally
+        uses: ./
+        with:
+          add_nonportable_bucket: 'true'
+        continue-on-error: true
 
-    - if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
-      uses: MinoruSekine/setup-scoop@main
-      with:
-        add_nonportable_bucket: 'true'
-      continue-on-error: true
+      - if: >
+          ${{ github.event_name == 'push'
+          || github.event_name == 'workflow_dispatch' }}
+        uses: MinoruSekine/setup-scoop@main
+        with:
+          add_nonportable_bucket: 'true'
+        continue-on-error: true
 
-    - if: ${{ github.event_name == 'schedule' }}
-      uses: MinoruSekine/setup-scoop@main
-      with:
-        add_nonportable_bucket: 'true'
-      continue-on-error: true
+      - if: ${{ github.event_name == 'schedule' }}
+        uses: MinoruSekine/setup-scoop@main
+        with:
+          add_nonportable_bucket: 'true'
+        continue-on-error: true
 
-    - name: Validate nonportable bucket is not available
-      shell: pwsh
-      run: |
-        if([bool](scoop bucket list | Select-String -Quiet "nonportable")) {Write-Error "Unexpectedly nonportable bucket is found." -ErrorAction Stop}
+      - name: Validate nonportable bucket is not available
+        shell: pwsh
+        run: |
+          if([bool](scoop bucket list | Select-String -Quiet "nonportable")) {
+            Write-Error "Unexpected nonportable bucket found." -ErrorAction Stop
+          }
