@@ -1,5 +1,7 @@
 name: 'Setup scoop'
-description: 'Integrate scoop command line installer into your workflow on Windows runner.'
+description: >-
+  Integrate scoop command line installer
+  into your workflow on Windows runner.
 branding:
   icon: 'hard-drive'
   color: 'green'
@@ -25,7 +27,8 @@ inputs:
     required: true
     default: 'false'
   update_path:
-    description: 'Update environment variable PATH for workflow if true (default)'
+    description: >-
+      Update environment variable PATH for workflow if true (default)
     required: true
     default: 'true'
   buckets:
@@ -54,12 +57,16 @@ runs:
             }
             scoop --version
         }
-        if('${{ inputs.update_path }}' -eq 'true') {Join-Path (Resolve-Path ~).Path "scoop\shims" >> $Env:GITHUB_PATH}
+        if('${{ inputs.update_path }}' -eq 'true') {
+            Join-Path (Resolve-Path ~).Path "scoop\shims" >> $Env:GITHUB_PATH
+        }
         if('${{ inputs.add_extras_bucket }}' -eq 'true') {
-            Write-Error 'setup-scoop: `add_extras_bucket` is now obsoleted, use `buckets` instead.' -ErrorAction Stop
+            Write-Error 'setup-scoop: `add_extras_bucket`' `
+            ' is now obsoleted,use `buckets` instead.' -ErrorAction Stop
         }
         if('${{ inputs.add_nonportable_bucket }}' -eq 'true') {
-            Write-Error 'setup-scoop: `add_nonportable_bucket` is now obsoleted, use `buckets` instead.' -ErrorAction Stop
+            Write-Error 'setup-scoop: `add_nonportable_bucket`' `
+            'is now obsoleted, use `buckets` instead.' -ErrorAction Stop
         }
         Write-Host 'setup-scoop: inputs.buckets ${{ inputs.buckets }}'
         $param_buckets_string = "${{ inputs.buckets }}"
