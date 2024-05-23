@@ -20,3 +20,13 @@ jobs:
           path: .\scripts\
           recurse: true
           output: results.sarif
+
+  YAMLLint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: YAMLLint
+        uses: karancode/yamllint-github-action@v2.1.1
