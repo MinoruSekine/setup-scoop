@@ -53,11 +53,13 @@
 - Specify bucket(s) to add
   - Delimit several buckets by white space like as `extras nonportable games`
   - Bucket(s) specified by this parameter must be "known" buckets, you can confirm them by `scoop bucket known` command
+- This parameter is optional, no extra buckets will be added if omitted
 
 ### `apps`
 
 - Specify application(s) to add
   - Delimit several applications by white space like as `plantuml doxygen`
+- This parameter is optional, no applications will be installed if omitted
 
 ### `scoop_update`
 
