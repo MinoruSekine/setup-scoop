@@ -1,7 +1,7 @@
 name: 'Setup scoop'
 description: >-
-  Integrate scoop command line installer
-  into your workflow on Windows runner.
+  Install apps to Windows runner by scoop,
+  and update PATH of your workflow.
 branding:
   icon: 'hard-drive'
   color: 'green'
