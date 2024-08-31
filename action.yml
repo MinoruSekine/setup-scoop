@@ -92,7 +92,7 @@ runs:
         }
         foreach($app in $apps) {
             Write-Host app $app
-            if ($app -inotmatch "^\w[\w/.@]+$") {
+            if ($app -inotmatch "^\w[\w/.@-]+$") {
                 Write-Error "Illegal app name `"$app`"." -ErrorAction Stop
             }
             scoop install $app
