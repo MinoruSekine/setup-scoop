@@ -12,7 +12,7 @@ if ($apps_string) {
 }
 WriteSetupScoopLog "apps: ${apps}"
 foreach($app in $apps) {
-    if ($app -inotmatch "^\w[\w/.@]+$") {
+    if ($app -inotmatch "^\w[\w/.@-]+$") {
         Write-Error "Illegal app name `"$app`"." -ErrorAction Stop
     }
     WriteSetupScoopLog "Installing `"${app}`""
