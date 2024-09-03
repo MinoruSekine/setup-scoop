@@ -23,13 +23,13 @@ jobs:
       uses: ./
       with:
         buckets: extras
-        apps: plantuml doxygen
+        apps: plantuml doxygen handbrake-cli
 
     - if: ${{ github.event_name != 'pull_request' }}
       uses: MinoruSekine/setup-scoop@main
       with:
         buckets: extras
-        apps: plantuml doxygen
+        apps: plantuml doxygen handbrake-cli
 
     - name: Validate apps are available or not
       shell: pwsh
