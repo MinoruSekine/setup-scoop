@@ -37,7 +37,7 @@ jobs:
           apps: plantuml doxygen handbrake-cli
 
       - if: ${{ github.event_name == 'schedule' }}
-        uses: MinoruSekine/setup-scoop@v4
+        uses: MinoruSekine/setup-scoop@v4.0.1
         with:
           buckets: extras
           apps: plantuml doxygen handbrake-cli
@@ -76,7 +76,7 @@ jobs:
         continue-on-error: true
 
       - if: ${{ github.event_name == 'schedule' }}
-        uses: MinoruSekine/setup-scoop@v4
+        uses: MinoruSekine/setup-scoop@v4.0.1
         with:
           buckets: extras
           apps: -foobar

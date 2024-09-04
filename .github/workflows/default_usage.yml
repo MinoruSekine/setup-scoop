@@ -31,7 +31,7 @@ jobs:
         uses: MinoruSekine/setup-scoop@main
 
       - if: ${{ github.event_name == 'schedule' }}
-        uses: MinoruSekine/setup-scoop@v4
+        uses: MinoruSekine/setup-scoop@v4.0.1
 
       - name: Confirm scoop working
         shell: pwsh
