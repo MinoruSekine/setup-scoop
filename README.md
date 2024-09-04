@@ -16,7 +16,7 @@
 
 - If you want to install "Doxygen" and "PlantUML", put codes like this into your workflow YAML
 ```yaml
-      - uses: MinoruSekine/setup-scoop@v4
+      - uses: MinoruSekine/setup-scoop@v4.0.1
         with:
           buckets: extras
           apps: doxygen plantuml
@@ -104,7 +104,7 @@ jobs:
         key: cache_version_${{ env.cache_version }}-${{ hashFiles(env.cache_hash_seed_file_path) }}
 
     - name: Install scoop (Windows)
-      uses: MinoruSekine/setup-scoop@v4
+      uses: MinoruSekine/setup-scoop@v4.0.1
       if: steps.restore_cache.outputs.cache-hit != 'true'
       with:
         install_scoop: 'true'
@@ -114,7 +114,7 @@ jobs:
         update_path: 'true'
 
     - name: Setup scoop PATH (Windows)
-      uses: MinoruSekine/setup-scoop@v4
+      uses: MinoruSekine/setup-scoop@v4.0.1
       if: steps.restore_cache.outputs.cache-hit == 'true'
       with:
         install_scoop: 'false'
