@@ -4,6 +4,7 @@ param(
 )
 
 Import-Module "$($PSScriptRoot)\LogModule"
+Import-Module "$($PSScriptRoot)\AppNameModule"
 
 WriteSetupScoopLog "parameter: ${apps_string}"
 [string[]] $apps = @()
@@ -12,7 +13,7 @@ if ($apps_string) {
 }
 WriteSetupScoopLog "apps: ${apps}"
 foreach($app in $apps) {
-    if ($app -inotmatch "^\w[\w/.@-]+$") {
+    if (IsAppNameValid $app) {
         Write-Error "Illegal app name `"$app`"." -ErrorAction Stop
     }
     WriteSetupScoopLog "Installing `"${app}`""
