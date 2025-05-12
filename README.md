@@ -1,5 +1,7 @@
 # setup-scoop
 
+[![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/MinoruSekine)
+
 ![Status of buckets](https://github.com/MinoruSekine/setup-scoop/actions/workflows/buckets.yml/badge.svg?event=schedule)
 ![Status of default usage](https://github.com/MinoruSekine/setup-scoop/actions/workflows/default_usage.yml/badge.svg?event=schedule)
 ![Status of install apps](https://github.com/MinoruSekine/setup-scoop/actions/workflows/install_apps.yml/badge.svg?event=schedule)
