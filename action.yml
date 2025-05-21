@@ -11,10 +11,12 @@ inputs:
     required: true
     default: 'true'
   add_extras_bucket:
+    deprecationMessage: 'This is obsoleted and use `buckets: extras`'
     description: 'This is obsoleted and use `buckets: extras`'
     required: true
     default: 'false'
   add_nonportable_bucket:
+    deprecationMessage: 'This is obsoleted and use `buckets: nonportable`'
     description: 'This is obsoleted and use `buckets: nonportable`'
     required: true
     default: 'false'
