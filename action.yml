@@ -2,6 +2,7 @@ name: 'Setup scoop'
 description: >-
   Install apps to Windows runner by scoop,
   and update PATH of your workflow.
+author: 'MinoruSekine'
 branding:
   icon: 'hard-drive'
   color: 'green'
