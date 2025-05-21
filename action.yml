@@ -46,7 +46,7 @@ inputs:
     required: false
     default: ''
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - name: 'Setup scoop'
       shell: pwsh
