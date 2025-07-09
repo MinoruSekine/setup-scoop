@@ -10,7 +10,7 @@ jobs:
   default:
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [windows-2025, windows-latest]
 
     runs-on: ${{ matrix.os }}
 

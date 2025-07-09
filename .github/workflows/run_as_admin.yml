@@ -10,7 +10,7 @@ jobs:
   GitHub_default_runner_without_RunAsAdmin:
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [windows-2025, windows-latest]
 
     runs-on: ${{ matrix.os }}
 
