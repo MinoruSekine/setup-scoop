@@ -13,7 +13,7 @@ jobs:
   install_app:
     strategy:
       matrix:
-        os: [windows-latest, windows-2019]
+        os: [windows-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -51,7 +51,7 @@ jobs:
   injection_attack_prevention:
     strategy:
       matrix:
-        os: [windows-latest, windows-2019]
+        os: [windows-latest]
 
     runs-on: ${{ matrix.os }}
 
