@@ -11,8 +11,8 @@
 
 ## Supported environments
 
+- `windows-2025`
 - `windows-latest`
-- `windows-2019`
 
 ## Parameters
 
