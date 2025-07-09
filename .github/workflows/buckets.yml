@@ -10,7 +10,7 @@ jobs:
   add_multiple_buckets_at_once:
     strategy:
       matrix:
-        os: [windows-latest, windows-2019]
+        os: [windows-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -40,7 +40,7 @@ jobs:
   illegal_bucket_name:
     strategy:
       matrix:
-        os: [windows-latest, windows-2019]
+        os: [windows-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -64,7 +64,7 @@ jobs:
   add_extras_bucket_by_buckets_parameter:
     strategy:
       matrix:
-        os: [windows-latest, windows-2019]
+        os: [windows-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -91,7 +91,7 @@ jobs:
   refuse_unknown_bucket:
     strategy:
       matrix:
-        os: [windows-latest, windows-2019]
+        os: [windows-latest]
 
     runs-on: ${{ matrix.os }}
 
