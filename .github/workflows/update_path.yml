@@ -45,7 +45,7 @@ jobs:
           update_path: 'true'
 
       - if: ${{ github.event_name == 'schedule' }}
-        uses: MinoruSekine/setup-scoop@v4.0.1
+        uses: MinoruSekine/setup-scoop@v4.0.2
         with:
           install_scoop: 'false'
           add_extras_bucket: 'false'
