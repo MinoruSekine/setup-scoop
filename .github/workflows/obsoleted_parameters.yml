@@ -13,7 +13,7 @@ jobs:
   add_extras_bucket:
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [windows-2025, windows-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -52,7 +52,7 @@ jobs:
   add_nonportable_bucket:
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [windows-2025, windows-latest]
 
     runs-on: ${{ matrix.os }}
 
