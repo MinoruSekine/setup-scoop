@@ -1,4 +1,4 @@
-name: Obsoleted parameters
+name: Obsoleted params
 
 on:
   pull_request:
