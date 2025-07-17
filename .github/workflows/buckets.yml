@@ -39,7 +39,7 @@ jobs:
         with:
           buckets: java games php
 
-      - name: Validate nonportable bucket is available
+      - name: Validate expected buckets are available
         shell: pwsh
         run: |
           $buckets = @("java", "games", "php")
