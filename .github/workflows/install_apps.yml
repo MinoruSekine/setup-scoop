@@ -8,6 +8,15 @@ on:
   schedule:
     - cron: 0 8 * * 1
   workflow_dispatch:
+    inputs:
+      targetVersion:
+        description: 'Workflow target'
+        required: true
+        default: 'main'
+        type: choice
+        options:
+          - main
+          - v4.0.2
 
 jobs:
   install_app:
@@ -29,14 +38,18 @@ jobs:
           apps: plantuml doxygen handbrake-cli
 
       - if: >
-          ${{ github.event_name == 'push'
-          || github.event_name == 'workflow_dispatch' }}
+          (github.event_name == 'push')
+          || (github.event_name == 'workflow_dispatch'
+              && github.event.inputs.targetVersion == 'main')
         uses: MinoruSekine/setup-scoop@main
         with:
           buckets: extras
           apps: plantuml doxygen handbrake-cli
 
-      - if: ${{ github.event_name == 'schedule' }}
+      - if: >
+          (github.event_name == 'schedule')
+          || (github.event_name == 'workflow_dispatch'
+              && github.event.inputs.targetVersion == 'v4.0.2')
         uses: MinoruSekine/setup-scoop@v4.0.2
         with:
           buckets: extras
@@ -67,15 +80,19 @@ jobs:
         continue-on-error: true
 
       - if: >
-          ${{ github.event_name == 'push'
-          || github.event_name == 'workflow_dispatch' }}
+          (github.event_name == 'push')
+          || (github.event_name == 'workflow_dispatch'
+              && github.event.inputs.targetVersion == 'main')
         uses: MinoruSekine/setup-scoop@main
         with:
           buckets: extras
           apps: -foobar
         continue-on-error: true
 
-      - if: ${{ github.event_name == 'schedule' }}
+      - if: >
+          (github.event_name == 'schedule')
+          || (github.event_name == 'workflow_dispatch'
+              && github.event.inputs.targetVersion == 'v4.0.2')
         uses: MinoruSekine/setup-scoop@v4.0.2
         with:
           buckets: extras

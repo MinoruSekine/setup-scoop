@@ -8,6 +8,15 @@ on:
   schedule:
     - cron: 0 8 * * 1
   workflow_dispatch:
+    inputs:
+      targetVersion:
+        description: 'Workflow target'
+        required: true
+        default: 'main'
+        type: choice
+        options:
+          - main
+          - v4.0.2
 
 jobs:
   update_PATH_only:
@@ -33,8 +42,9 @@ jobs:
           update_path: 'true'
 
       - if: >
-          ${{ github.event_name == 'push'
-          || github.event_name == 'workflow_dispatch' }}
+          (github.event_name == 'push')
+          || (github.event_name == 'workflow_dispatch'
+              && github.event.inputs.targetVersion == 'main')
         uses: MinoruSekine/setup-scoop@main
         with:
           install_scoop: 'false'
@@ -44,7 +54,10 @@ jobs:
           scoop_checkup: 'false'
           update_path: 'true'
 
-      - if: ${{ github.event_name == 'schedule' }}
+      - if: >
+          (github.event_name == 'schedule')
+          || (github.event_name == 'workflow_dispatch'
+              && github.event.inputs.targetVersion == 'v4.0.2')
         uses: MinoruSekine/setup-scoop@v4.0.2
         with:
           install_scoop: 'false'
