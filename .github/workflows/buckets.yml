@@ -8,6 +8,15 @@ on:
   schedule:
     - cron: 0 8 * * 1
   workflow_dispatch:
+    inputs:
+      targetVersion:
+        description: 'Workflow target'
+        required: true
+        default: 'main'
+        type: choice
+        options:
+          - main
+          - v4.0.2
 
 jobs:
   add_multiple_buckets_at_once:
@@ -18,28 +27,32 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - if: ${{ github.event_name == 'pull_request' }}
+      - if: github.event_name == 'pull_request'
         uses: actions/checkout@v4
 
-      - if: ${{ github.event_name == 'pull_request' }}
+      - if: github.event_name == 'pull_request'
         name: Run actions locally
         uses: ./
         with:
           buckets: java games php
 
       - if: >
-          ${{ github.event_name == 'workflow_dispatch'
-          || github.event_name == 'push' }}
+          (github.event_name == 'push')
+          || (github.event_name == 'workflow_dispatch'
+              && github.event.inputs.targetVersion == 'main')
         uses: MinoruSekine/setup-scoop@main
         with:
           buckets: java games php
 
-      - if: ${{ github.event_name == 'schedule' }}
+      - if: >
+          (github.event_name == 'schedule')
+          || (github.event_name == 'workflow_dispatch'
+              && github.event.inputs.targetVersion == 'v4.0.2')
         uses: MinoruSekine/setup-scoop@v4.0.2
         with:
           buckets: java games php
 
-      - name: Validate nonportable bucket is available
+      - name: Validate expected buckets are available
         shell: pwsh
         run: |
           $buckets = @("java", "games", "php")
@@ -57,10 +70,10 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - if: ${{ github.event_name == 'pull_request' }}
+      - if: github.event_name == 'pull_request'
         uses: actions/checkout@v4
 
-      - if: ${{ github.event_name == 'pull_request' }}
+      - if: github.event_name == 'pull_request'
         name: Run actions locally
         uses: ./
         with:
@@ -68,14 +81,18 @@ jobs:
         continue-on-error: true
 
       - if: >
-          ${{ github.event_name == 'workflow_dispatch'
-          || github.event_name == 'push' }}
+          (github.event_name == 'push')
+          || (github.event_name == 'workflow_dispatch'
+              && github.event.inputs.targetVersion == 'main')
         uses: MinoruSekine/setup-scoop@main
         with:
           buckets: java -add
         continue-on-error: true
 
-      - if: ${{ github.event_name == 'schedule' }}
+      - if: >
+          (github.event_name == 'schedule')
+          || (github.event_name == 'workflow_dispatch'
+              && github.event.inputs.targetVersion == 'v4.0.2')
         uses: MinoruSekine/setup-scoop@v4.0.2
         with:
           buckets: java -add
@@ -89,23 +106,27 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - if: ${{ github.event_name == 'pull_request' }}
+      - if: github.event_name == 'pull_request'
         uses: actions/checkout@v4
 
-      - if: ${{ github.event_name == 'pull_request' }}
+      - if: github.event_name == 'pull_request'
         name: Run actions locally
         uses: ./
         with:
           buckets: extras
 
       - if: >
-          ${{ github.event_name == 'workflow_dispatch'
-          || github.event_name == 'push' }}
+          (github.event_name == 'push')
+          || (github.event_name == 'workflow_dispatch'
+              && github.event.inputs.targetVersion == 'main')
         uses: MinoruSekine/setup-scoop@main
         with:
           buckets: extras
 
-      - if: ${{ github.event_name == 'schedule' }}
+      - if: >
+          (github.event_name == 'schedule')
+          || (github.event_name == 'workflow_dispatch'
+              && github.event.inputs.targetVersion == 'v4.0.2')
         uses: MinoruSekine/setup-scoop@v4.0.2
         with:
           buckets: extras
@@ -125,25 +146,30 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - if: ${{ github.event_name == 'pull_request' }}
+      - if: github.event_name == 'pull_request'
         uses: actions/checkout@v4
 
-      - if: ${{ github.event_name == 'pull_request' }}
+      - if: github.event_name == 'pull_request'
         name: Run actions locally
         uses: ./
         with:
           buckets: unknown
         continue-on-error: true
 
+
       - if: >
-          ${{ github.event_name == 'workflow_dispatch'
-          || github.event_name == 'push' }}
+          (github.event_name == 'push')
+          || (github.event_name == 'workflow_dispatch'
+              && github.event.inputs.targetVersion == 'main')
         uses: MinoruSekine/setup-scoop@main
         with:
           buckets: unknown
         continue-on-error: true
 
-      - if: ${{ github.event_name == 'schedule' }}
+      - if: >
+          (github.event_name == 'schedule')
+          || (github.event_name == 'workflow_dispatch'
+              && github.event.inputs.targetVersion == 'v4.0.2')
         uses: MinoruSekine/setup-scoop@v4.0.2
         with:
           buckets: unknown
