@@ -102,7 +102,7 @@ jobs:
       id: restore_cache
       uses: actions/cache@v4
       with:
-        path: ${{ matrix.to_cache_dir }}
+        path: '~/scoop'
         key: cache_version_${{ env.cache_version }}-${{ hashFiles(env.cache_hash_seed_file_path) }}
 
     - name: Install scoop (Windows)
