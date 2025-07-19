@@ -2,12 +2,12 @@
 
 [![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/MinoruSekine)
 
-![Status of buckets](https://github.com/MinoruSekine/setup-scoop/actions/workflows/buckets.yml/badge.svg?branch=main)
-![Status of default usage](https://github.com/MinoruSekine/setup-scoop/actions/workflows/default_usage.yml/badge.svg?branch=main)
-![Status of install apps](https://github.com/MinoruSekine/setup-scoop/actions/workflows/install_apps.yml/badge.svg?branch=main)
-![Status of obsoleted parameters](https://github.com/MinoruSekine/setup-scoop/actions/workflows/obsoleted_parameters.yml/badge.svg?branch=main)
-![Status of run as admin](https://github.com/MinoruSekine/setup-scoop/actions/workflows/run_as_admin.yml/badge.svg?branch=main)
-![Status of update path](https://github.com/MinoruSekine/setup-scoop/actions/workflows/update_path.yml/badge.svg?branch=main)
+![v4.0.2 status of buckets](https://github.com/MinoruSekine/setup-scoop/actions/workflows/buckets.yml/badge.svg?event=schedule)
+![v4.0.2 status of default usage](https://github.com/MinoruSekine/setup-scoop/actions/workflows/default_usage.yml/badge.svg?event=schedule)
+![v4.0.2 status of install apps](https://github.com/MinoruSekine/setup-scoop/actions/workflows/install_apps.yml/badge.svg?event=schedule)
+![v4.0.2 status of obsoleted parameters](https://github.com/MinoruSekine/setup-scoop/actions/workflows/obsoleted_parameters.yml/badge.svg?event=schedule)
+![v4.0.2 status of run as admin](https://github.com/MinoruSekine/setup-scoop/actions/workflows/run_as_admin.yml/badge.svg?event=schedule)
+![v4.0.2 status of update path](https://github.com/MinoruSekine/setup-scoop/actions/workflows/update_path.yml/badge.svg?event=schedule)
 
 - `setup-scoop` action provides functions below
   - Install `scoop` to your Windows runner
@@ -102,7 +102,7 @@ jobs:
       id: restore_cache
       uses: actions/cache@v4
       with:
-        path: ${{ matrix.to_cache_dir }}
+        path: '~/scoop'
         key: cache_version_${{ env.cache_version }}-${{ hashFiles(env.cache_hash_seed_file_path) }}
 
     - name: Install scoop (Windows)
