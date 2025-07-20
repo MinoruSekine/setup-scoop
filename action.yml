@@ -4,8 +4,8 @@ description: >-
   and update PATH of your workflow.
 author: 'MinoruSekine'
 branding:
-  icon: 'hard-drive'
-  color: 'green'
+  icon: 'package'
+  color: 'blue'
 inputs:
   install_scoop:
     description: 'Install scoop if true (default)'
