@@ -1,4 +1,4 @@
-name: Buckets
+name: Edge case
 
 on:
   pull_request:
@@ -19,7 +19,8 @@ on:
           - v4.0.2
 
 jobs:
-  add_multiple_buckets_at_once:
+# `apps` parameters tests.
+  injection_attack_prevention:
     strategy:
       matrix:
         os: [windows-2025, windows-latest]
@@ -34,7 +35,8 @@ jobs:
         name: Run actions locally
         uses: ./
         with:
-          buckets: java games php
+          apps: -foobar
+        continue-on-error: true
 
       - if: >
           (github.event_name == 'push')
@@ -42,7 +44,9 @@ jobs:
               && github.event.inputs.targetVersion == 'main')
         uses: MinoruSekine/setup-scoop@main
         with:
-          buckets: java games php
+          buckets: extras
+          apps: -foobar
+        continue-on-error: true
 
       - if: >
           (github.event_name == 'schedule')
@@ -50,18 +54,11 @@ jobs:
               && github.event.inputs.targetVersion == 'v4.0.2')
         uses: MinoruSekine/setup-scoop@v4.0.2
         with:
-          buckets: java games php
+          buckets: extras
+          apps: -foobar
+        continue-on-error: true
 
-      - name: Validate expected buckets are available
-        shell: pwsh
-        run: |
-          $buckets = @("java", "games", "php")
-          foreach($bucket in $buckets) {
-            if(-Not [bool](scoop bucket list | Select-String -Quiet $bucket)) {
-              Write-Error "`"$bucket`" bucket not found." -ErrorAction Stop
-            }
-          }
-
+# `buckets` parameter tests.
   illegal_bucket_name:
     strategy:
       matrix:
@@ -97,46 +94,6 @@ jobs:
         with:
           buckets: java -add
         continue-on-error: true
-
-  add_extras_bucket_by_buckets_parameter:
-    strategy:
-      matrix:
-        os: [windows-2025, windows-latest]
-
-    runs-on: ${{ matrix.os }}
-
-    steps:
-      - if: github.event_name == 'pull_request'
-        uses: actions/checkout@v4
-
-      - if: github.event_name == 'pull_request'
-        name: Run actions locally
-        uses: ./
-        with:
-          buckets: extras
-
-      - if: >
-          (github.event_name == 'push')
-          || (github.event_name == 'workflow_dispatch'
-              && github.event.inputs.targetVersion == 'main')
-        uses: MinoruSekine/setup-scoop@main
-        with:
-          buckets: extras
-
-      - if: >
-          (github.event_name == 'schedule')
-          || (github.event_name == 'workflow_dispatch'
-              && github.event.inputs.targetVersion == 'v4.0.2')
-        uses: MinoruSekine/setup-scoop@v4.0.2
-        with:
-          buckets: extras
-
-      - name: Validate extras bucket is available
-        shell: pwsh
-        run: |
-          if(-Not [bool](scoop bucket list | Select-String -Quiet "extras")) {
-            Write-Error "extras bucket not found." -ErrorAction Stop
-          }
 
   refuse_unknown_bucket:
     strategy:
@@ -174,3 +131,127 @@ jobs:
         with:
           buckets: unknown
         continue-on-error: true
+
+# `run_as_admin` tests.
+  GitHub_default_runner_without_RunAsAdmin:
+    strategy:
+      matrix:
+        os: [windows-2025, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - if: github.event_name == 'pull_request'
+        uses: actions/checkout@v4
+
+      - if: github.event_name == 'pull_request'
+        name: Run actions locally
+        uses: ./
+        with:
+          run_as_admin: false
+        continue-on-error: true
+
+      - if: >
+          (github.event_name == 'push')
+          || (github.event_name == 'workflow_dispatch'
+              && github.event.inputs.targetVersion == 'main')
+        uses: MinoruSekine/setup-scoop@main
+        with:
+          run_as_admin: false
+        continue-on-error: true
+
+      - if: >
+          (github.event_name == 'schedule')
+          || (github.event_name == 'workflow_dispatch'
+              && github.event.inputs.targetVersion == 'v4.0.2')
+        uses: MinoruSekine/setup-scoop@v4.0.2
+        with:
+          run_as_admin: false
+        continue-on-error: true
+
+# Obsoleted parameters tests.
+  add_extras_bucket:
+    strategy:
+      matrix:
+        os: [windows-2025, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - if: github.event_name == 'pull_request'
+        uses: actions/checkout@v4
+
+      - if: github.event_name == 'pull_request'
+        name: Run actions locally
+        uses: ./
+        with:
+          add_extras_bucket: 'true'
+        continue-on-error: true
+
+      - if: >
+          (github.event_name == 'push')
+          || (github.event_name == 'workflow_dispatch'
+              && github.event.inputs.targetVersion == 'main')
+        uses: MinoruSekine/setup-scoop@main
+        with:
+          add_extras_bucket: 'true'
+        continue-on-error: true
+
+      - if: >
+          (github.event_name == 'schedule')
+          || (github.event_name == 'workflow_dispatch'
+              && github.event.inputs.targetVersion == 'v4.0.2')
+        uses: MinoruSekine/setup-scoop@v4.0.2
+        with:
+          add_extras_bucket: 'true'
+        continue-on-error: true
+
+      - name: Validate extras bucket is not available
+        shell: pwsh
+        run: |
+          if([bool](scoop bucket list | Select-String -Quiet "extras")) {
+            Write-Error "Unexepected extras bucket found." -ErrorAction Stop
+          }
+
+  add_nonportable_bucket:
+    strategy:
+      matrix:
+        os: [windows-2025, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - if: github.event_name == 'pull_request'
+        uses: actions/checkout@v4
+
+      - if: github.event_name == 'pull_request'
+        name: Run actions locally
+        uses: ./
+        with:
+          add_nonportable_bucket: 'true'
+        continue-on-error: true
+
+      - if: >
+          (github.event_name == 'push')
+          || (github.event_name == 'workflow_dispatch'
+              && github.event.inputs.targetVersion == 'main')
+        uses: MinoruSekine/setup-scoop@main
+        with:
+          add_nonportable_bucket: 'true'
+        continue-on-error: true
+
+      - if: >
+          (github.event_name == 'schedule')
+          || (github.event_name == 'workflow_dispatch'
+              && github.event.inputs.targetVersion == 'v4.0.2')
+        uses: MinoruSekine/setup-scoop@v4.0.2
+        with:
+          add_nonportable_bucket: 'true'
+        continue-on-error: true
+
+      - name: Validate nonportable bucket is not available
+        shell: pwsh
+        run: |
+          if([bool](scoop bucket list | Select-String -Quiet "nonportable")) {
+            Write-Error "Unexpected nonportable bucket found." -ErrorAction Stop
+          }
