@@ -7,8 +7,10 @@
 
 ## Status
 
-![v4.0.2 status of typical usage](https://github.com/MinoruSekine/setup-scoop/actions/workflows/typical_usage.yml/badge.svg?event=schedule)
-![v4.0.2 status of edge case](https://github.com/MinoruSekine/setup-scoop/actions/workflows/edge_case.yml/badge.svg?event=schedule)
+| Type | ref | Status |
+| --- | --- | --- |
+| Latest release | `v4.0.2` | ![v4.0.2 status of typical usage](https://github.com/MinoruSekine/setup-scoop/actions/workflows/typical_usage.yml/badge.svg?event=schedule) ![v4.0.2 status of edge case](https://github.com/MinoruSekine/setup-scoop/actions/workflows/edge_case.yml/badge.svg?event=schedule) |
+| Development branch | `main` | ![main status of typical usage](https://github.com/MinoruSekine/setup-scoop/actions/workflows/typical_usage.yml/badge.svg?branch=main) ![main status of edge case](https://github.com/MinoruSekine/setup-scoop/actions/workflows/edge_case.yml/badge.svg?branch=main) ![main status of lint](https://github.com/MinoruSekine/setup-scoop/actions/workflows/lint.yml/badge.svg?branch=main) |
 
 [![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/MinoruSekine)
 
