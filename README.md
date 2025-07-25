@@ -1,13 +1,16 @@
 # setup-scoop
 
-[![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/MinoruSekine)
-
-![v4.0.2 status of typical usage](https://github.com/MinoruSekine/setup-scoop/actions/workflows/typical_usage.yml/badge.svg?event=schedule)
-![v4.0.2 status of edge case](https://github.com/MinoruSekine/setup-scoop/actions/workflows/edge_case.yml/badge.svg?event=schedule)
 - `setup-scoop` action provides functions below
   - Install `scoop` to your Windows runner
   - Update `PATH` environment variable
   - Install applications by `scoop`
+
+## Status
+
+![v4.0.2 status of typical usage](https://github.com/MinoruSekine/setup-scoop/actions/workflows/typical_usage.yml/badge.svg?event=schedule)
+![v4.0.2 status of edge case](https://github.com/MinoruSekine/setup-scoop/actions/workflows/edge_case.yml/badge.svg?event=schedule)
+
+[![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/MinoruSekine)
 
 ## Sample usage
 
