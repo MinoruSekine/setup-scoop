@@ -1,3 +1,5 @@
+---
+
 name: Edge case
 
 on:
@@ -19,7 +21,7 @@ on:
           - v4.0.2
 
 jobs:
-# `apps` parameters tests.
+  # `apps` parameters tests.
   injection_attack_prevention:
     strategy:
       matrix:
@@ -58,7 +60,7 @@ jobs:
           apps: -foobar
         continue-on-error: true
 
-# `buckets` parameter tests.
+  # `buckets` parameter tests.
   illegal_bucket_name:
     strategy:
       matrix:
@@ -132,7 +134,7 @@ jobs:
           buckets: unknown
         continue-on-error: true
 
-# `run_as_admin` tests.
+  # `run_as_admin` tests.
   GitHub_default_runner_without_RunAsAdmin:
     strategy:
       matrix:
@@ -169,7 +171,7 @@ jobs:
           run_as_admin: false
         continue-on-error: true
 
-# Obsoleted parameters tests.
+  # Obsoleted parameters tests.
   add_extras_bucket:
     strategy:
       matrix:

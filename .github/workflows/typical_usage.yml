@@ -1,3 +1,5 @@
+---
+
 name: Typical usage
 
 on:
@@ -19,7 +21,7 @@ on:
           - v4.0.2
 
 jobs:
-# Typical usage
+  # Typical usage
   default:
     strategy:
       matrix:
@@ -61,7 +63,7 @@ jobs:
             }
           }
 
-# `buckets` parameter check
+  # `buckets` parameter check
   add_extras_bucket_by_buckets_parameter:
     strategy:
       matrix:
@@ -145,7 +147,7 @@ jobs:
             }
           }
 
-# Install apps check
+  # Install apps check
   install_apps:
     strategy:
       matrix:
@@ -188,7 +190,7 @@ jobs:
           gcm plantuml
           gcm doxygen
 
-# `update_path` without installing scoop, any buckets, and any apps
+  # `update_path` without installing scoop, any buckets, and any apps
   update_PATH_only:
     strategy:
       matrix:
