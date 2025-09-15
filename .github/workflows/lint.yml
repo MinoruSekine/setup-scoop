@@ -32,3 +32,13 @@ jobs:
 
       - name: YAMLLint
         uses: karancode/yamllint-github-action@v2.1.1
+
+  markdown-lint:
+    name: Lint markdown files.
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DavidAnson/markdownlint-cli2-action@v20
