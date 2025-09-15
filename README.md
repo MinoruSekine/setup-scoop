@@ -12,11 +12,13 @@
 | Latest release | `v4.0.2` | ![v4.0.2 status of typical usage](https://github.com/MinoruSekine/setup-scoop/actions/workflows/typical_usage.yml/badge.svg?event=schedule) ![v4.0.2 status of edge case](https://github.com/MinoruSekine/setup-scoop/actions/workflows/edge_case.yml/badge.svg?event=schedule) |
 | Development branch | `main` | ![main status of typical usage](https://github.com/MinoruSekine/setup-scoop/actions/workflows/typical_usage.yml/badge.svg?branch=main) ![main status of edge case](https://github.com/MinoruSekine/setup-scoop/actions/workflows/edge_case.yml/badge.svg?branch=main) ![main status of lint](https://github.com/MinoruSekine/setup-scoop/actions/workflows/lint.yml/badge.svg?branch=main) |
 
-[![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/MinoruSekine)
+[![Sponsors](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/MinoruSekine)
 
 ## Sample usage
 
-- If you want to install "Doxygen" and "PlantUML", put codes like this into your workflow YAML
+- If you want to install "Doxygen" and "PlantUML",
+  put codes like this into your workflow YAML
+
 ```yaml
       - uses: MinoruSekine/setup-scoop@v4.0.2
         with:
@@ -32,6 +34,7 @@
 ## Parameters
 
 - Parameters can be specified by `with:` like this
+
 ```yaml
         with:
           buckets: extras
@@ -42,19 +45,23 @@
 
 - If `true` (default), `scoop` will be installed
 - If `false`, `scoop` will not be installed
-  - For example, it is unnecessary to install scoop because cached `~/scoop/` will be recovered
+  - For example,
+    it is unnecessary to install scoop
+    because cached `~/scoop/` will be recovered
 
 ### `run_as_admin`
 
 - If `true` (default), `scoop` will be installed with option `-RunAsAdmin`
-  - Windows Runners provided by GitHub may need this, because currently they run with Administrator privilege
+  - Windows Runners provided by GitHub may need this,
+    because currently they run with Administrator privilege
 - If `false`, `scoop` will be installed without option `-RunAsAdmin`
 
 ### `buckets`
 
 - Specify bucket(s) to add
   - Delimit several buckets by white space like as `extras nonportable games`
-  - Bucket(s) specified by this parameter must be "known" buckets, you can confirm them by `scoop bucket known` command
+  - Bucket(s) specified by this parameter must be "known" buckets,
+    you can confirm them by `scoop bucket known` command
 - This parameter is optional, no extra buckets will be added if omitted
 
 ### `apps`
@@ -81,16 +88,25 @@
 ## Advanced usage
 
 ### Sample to improve workflow performance with `actions/cache`
-- If cache is available, `install_scoop` will be `false` to skip installation and only `update_path` will be `true`
-- Include `packages_to_install` into cache seed to validate cache is including enough apps or not
-- Increment `cache_version` if cache should be expired without changing `packages_to_install`
+
+- If cache is available, `install_scoop` will be `false`
+  to skip installation and only `update_path` will be `true`
+- Include `packages_to_install` into cache seed
+  to validate cache is including enough apps or not
+- Increment `cache_version`
+  if cache should be expired without changing `packages_to_install`
+
 ```yaml
 env:
   packages_to_install: shellcheck
   cache_version: v0
   cache_hash_seed_file_path: './.github/workflows/cache_seed_file_for_scoop.txt'
 ```
+
 (snipped)
+
+<!-- markdownlint-disable line-length -->
+
 ```yaml
 jobs:
   build:
@@ -123,3 +139,5 @@ jobs:
         scoop_update: 'false'
         update_path: 'true'
 ```
+
+<!-- markdownlint-enable line-length -->
