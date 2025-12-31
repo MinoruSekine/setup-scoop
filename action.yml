@@ -66,7 +66,7 @@ runs:
         }
         if('${{ inputs.add_extras_bucket }}' -eq 'true') {
             Write-Error 'setup-scoop: `add_extras_bucket`' `
-            ' is now obsoleted,use `buckets` instead.' -ErrorAction Stop
+            ' is now obsoleted, use `buckets` instead.' -ErrorAction Stop
         }
         if('${{ inputs.add_nonportable_bucket }}' -eq 'true') {
             Write-Error 'setup-scoop: `add_nonportable_bucket`' `
