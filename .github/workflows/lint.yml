@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Run PSScriptAnalyzer
-        uses: microsoft/psscriptanalyzer-action@v1.0
+        uses: microsoft/psscriptanalyzer-action@v1.1
         with:
           path: .\scripts\
           recurse: true
@@ -31,7 +31,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: YAMLLint
-        uses: karancode/yamllint-github-action@v2.1.1
+        uses: karancode/yamllint-github-action@v3.0.0
 
   markdown-lint:
     name: Lint markdown files.
@@ -41,4 +41,4 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: DavidAnson/markdownlint-cli2-action@v20
+      - uses: DavidAnson/markdownlint-cli2-action@v22.0.0
