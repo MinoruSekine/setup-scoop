@@ -149,6 +149,9 @@ jobs:
 
   # Install apps check
   install_apps:
+    env:
+      TEST_TARGET_APPS: "plantuml doxygen"
+
     strategy:
       matrix:
         os: [windows-2025, windows-latest]
@@ -164,7 +167,7 @@ jobs:
         uses: ./
         with:
           buckets: extras
-          apps: plantuml doxygen handbrake-cli
+          apps: ${{ env.TEST_TARGET_APPS }}
 
       - if: >
           (github.event_name == 'push')
@@ -173,7 +176,7 @@ jobs:
         uses: MinoruSekine/setup-scoop@main
         with:
           buckets: extras
-          apps: plantuml doxygen handbrake-cli
+          apps: ${{ env.TEST_TARGET_APPS }}
 
       - if: >
           (github.event_name == 'schedule')
@@ -182,13 +185,15 @@ jobs:
         uses: MinoruSekine/setup-scoop@v4.0.2
         with:
           buckets: extras
-          apps: plantuml doxygen handbrake-cli
+          apps: ${{ env.TEST_TARGET_APPS }}
+
 
       - name: Validate apps are available or not
         shell: pwsh
         run: |
-          gcm plantuml
-          gcm doxygen
+          "${{ env.TEST_TARGET_APPS }}" -split " " | ForEach-Object {
+            Get-Command $_ -ErrorAction Stop
+          }
 
   # `update_path` without installing scoop, any buckets, and any apps
   update_PATH_only:
