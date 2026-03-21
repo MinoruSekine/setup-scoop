@@ -150,7 +150,7 @@ jobs:
   # Install apps check
   install_apps:
     env:
-      TEST_TARGET_APPS: "plantuml doxygen"
+      TEST_TARGET_APPS: "doxygen fclones xh"
 
     strategy:
       matrix:
