@@ -1,0 +1,17 @@
+---
+
+name: Edge case (dev)
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: 0 6 * * *
+  workflow_dispatch:
+
+jobs:
+  edge_case:
+    uses: ./.github/workflows/_edge_case.yml
+    with:
+      target: 'dev'

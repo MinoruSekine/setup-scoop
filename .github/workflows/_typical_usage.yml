@@ -1,24 +1,18 @@
 ---
 
-name: Typical usage
+name: Typical usage workflow common parts (reusable workflow)
 
 on:
-  pull_request:
-  push:
-    branches:
-      - main
-  schedule:
-    - cron: 0 20 * * *
-  workflow_dispatch:
+  workflow_call:
     inputs:
-      targetVersion:
-        description: 'Workflow target'
+      target:
+        description: |
+          Workflow target.
+          - "dev": HEAD of dev branch
+          - "release": latest release tag
+          - "pr": PR
         required: true
-        default: 'main'
-        type: choice
-        options:
-          - main
-          - v4.0.2
+        type: string
 
 jobs:
   # Typical usage
@@ -30,23 +24,17 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - if: github.event_name == 'pull_request'
+      - if: inputs.target == 'pr'
         uses: actions/checkout@v6
 
-      - if: github.event_name == 'pull_request'
+      - if: inputs.target == 'pr'
         name: Run actions locally
         uses: ./
 
-      - if: >
-          (github.event_name == 'push')
-          || (github.event_name == 'workflow_dispatch'
-              && github.event.inputs.targetVersion == 'main')
+      - if: inputs.target == 'dev'
         uses: MinoruSekine/setup-scoop@main
 
-      - if: >
-          (github.event_name == 'schedule')
-          || (github.event_name == 'workflow_dispatch'
-              && github.event.inputs.targetVersion == 'v4.0.2')
+      - if: inputs.target == 'release'
         uses: MinoruSekine/setup-scoop@v4.0.2
 
       - name: Confirm scoop working
@@ -72,27 +60,21 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - if: github.event_name == 'pull_request'
+      - if: inputs.target == 'pr'
         uses: actions/checkout@v6
 
-      - if: github.event_name == 'pull_request'
+      - if: inputs.target == 'pr'
         name: Run actions locally
         uses: ./
         with:
           buckets: extras
 
-      - if: >
-          (github.event_name == 'push')
-          || (github.event_name == 'workflow_dispatch'
-              && github.event.inputs.targetVersion == 'main')
+      - if: inputs.target == 'dev'
         uses: MinoruSekine/setup-scoop@main
         with:
           buckets: extras
 
-      - if: >
-          (github.event_name == 'schedule')
-          || (github.event_name == 'workflow_dispatch'
-              && github.event.inputs.targetVersion == 'v4.0.2')
+      - if: inputs.target == 'release'
         uses: MinoruSekine/setup-scoop@v4.0.2
         with:
           buckets: extras
@@ -112,27 +94,21 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - if: github.event_name == 'pull_request'
+      - if: inputs.target == 'pr'
         uses: actions/checkout@v6
 
-      - if: github.event_name == 'pull_request'
+      - if: inputs.target == 'pr'
         name: Run actions locally
         uses: ./
         with:
           buckets: java games php
 
-      - if: >
-          (github.event_name == 'push')
-          || (github.event_name == 'workflow_dispatch'
-              && github.event.inputs.targetVersion == 'main')
+      - if: inputs.target == 'dev'
         uses: MinoruSekine/setup-scoop@main
         with:
           buckets: java games php
 
-      - if: >
-          (github.event_name == 'schedule')
-          || (github.event_name == 'workflow_dispatch'
-              && github.event.inputs.targetVersion == 'v4.0.2')
+      - if: inputs.target == 'release'
         uses: MinoruSekine/setup-scoop@v4.0.2
         with:
           buckets: java games php
@@ -159,29 +135,23 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - if: github.event_name == 'pull_request'
+      - if: inputs.target == 'pr'
         uses: actions/checkout@v6
 
-      - if: github.event_name == 'pull_request'
+      - if: inputs.target == 'pr'
         name: Run actions locally
         uses: ./
         with:
           buckets: extras
           apps: ${{ env.TEST_TARGET_APPS }}
 
-      - if: >
-          (github.event_name == 'push')
-          || (github.event_name == 'workflow_dispatch'
-              && github.event.inputs.targetVersion == 'main')
+      - if: inputs.target == 'dev'
         uses: MinoruSekine/setup-scoop@main
         with:
           buckets: extras
           apps: ${{ env.TEST_TARGET_APPS }}
 
-      - if: >
-          (github.event_name == 'schedule')
-          || (github.event_name == 'workflow_dispatch'
-              && github.event.inputs.targetVersion == 'v4.0.2')
+      - if: inputs.target == 'release'
         uses: MinoruSekine/setup-scoop@v4.0.2
         with:
           buckets: extras
@@ -204,10 +174,10 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - if: github.event_name == 'pull_request'
+      - if: inputs.target == 'pr'
         uses: actions/checkout@v6
 
-      - if: github.event_name == 'pull_request'
+      - if: inputs.target == 'pr'
         name: Run actions locally
         uses: ./
         with:
@@ -218,10 +188,7 @@ jobs:
           scoop_checkup: 'false'
           update_path: 'true'
 
-      - if: >
-          (github.event_name == 'push')
-          || (github.event_name == 'workflow_dispatch'
-              && github.event.inputs.targetVersion == 'main')
+      - if: inputs.target == 'dev'
         uses: MinoruSekine/setup-scoop@main
         with:
           install_scoop: 'false'
@@ -231,10 +198,7 @@ jobs:
           scoop_checkup: 'false'
           update_path: 'true'
 
-      - if: >
-          (github.event_name == 'schedule')
-          || (github.event_name == 'workflow_dispatch'
-              && github.event.inputs.targetVersion == 'v4.0.2')
+      - if: inputs.target == 'release'
         uses: MinoruSekine/setup-scoop@v4.0.2
         with:
           install_scoop: 'false'

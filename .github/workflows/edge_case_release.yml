@@ -1,0 +1,14 @@
+---
+
+name: Edge case (release)
+
+on:
+  schedule:
+    - cron: 0 18 * * *
+  workflow_dispatch:
+
+jobs:
+  edge_case:
+    uses: ./.github/workflows/_edge_case.yml
+    with:
+      target: 'release'

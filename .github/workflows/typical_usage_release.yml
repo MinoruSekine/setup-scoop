@@ -1,0 +1,14 @@
+---
+
+name: Typical usage (release)
+
+on:
+  schedule:
+    - cron: 0 18 * * *
+  workflow_dispatch:
+
+jobs:
+  typical_usage:
+    uses: ./.github/workflows/_typical_usage.yml
+    with:
+      target: 'release'
