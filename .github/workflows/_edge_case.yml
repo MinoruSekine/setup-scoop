@@ -176,7 +176,7 @@ jobs:
         shell: pwsh
         run: |
           if([bool](scoop bucket list | Select-String -Quiet "extras")) {
-            Write-Error "Unexepected extras bucket found." -ErrorAction Stop
+            Write-Error "Unexpected extras bucket found." -ErrorAction Stop
           }
 
   add_nonportable_bucket:
