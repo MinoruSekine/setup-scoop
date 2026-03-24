@@ -1,0 +1,17 @@
+---
+
+name: Typical usage (dev)
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: 0 6 * * *
+  workflow_dispatch:
+
+jobs:
+  typical_usage:
+    uses: ./.github/workflows/_typical_usage.yml
+    with:
+      target: 'dev'

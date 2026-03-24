@@ -1,0 +1,12 @@
+---
+
+name: Edge case (PR)
+
+on:
+  pull_request:
+
+jobs:
+  edge_case:
+    uses: ./.github/workflows/_edge_case.yml
+    with:
+      target: 'pr'

@@ -1,0 +1,12 @@
+---
+
+name: Typical usage (PR)
+
+on:
+  pull_request:
+
+jobs:
+  typical_usage:
+    uses: ./.github/workflows/_typical_usage.yml
+    with:
+      target: 'pr'
