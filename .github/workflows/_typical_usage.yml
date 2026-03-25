@@ -211,7 +211,11 @@ jobs:
       - name: Confirm PATH and scoop is unavailable.
         shell: pwsh
         run: |
-          ($Env:Path -match "scoop")
+          if ($Env:Path -notmatch "scoop") {
+            Write-Error `
+              "PATH environment variable doesn't include path to scoop." `
+              -ErrorAction Stop
+          }
           if(Get-Command scoop -ErrorAction SilentlyContinue) {
             Write-Error "Unexpectedly found scoop." -ErrorAction Stop
           }
