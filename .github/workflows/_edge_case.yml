@@ -27,26 +27,40 @@ jobs:
       - if: inputs.target == 'pr'
         uses: actions/checkout@v6
 
-      - if: inputs.target == 'pr'
+      - id: pr
+        if: inputs.target == 'pr'
         name: Run actions locally
         uses: ./
         with:
           apps: -foobar
         continue-on-error: true
 
-      - if: inputs.target == 'dev'
+      - id: dev
+        if: inputs.target == 'dev'
         uses: MinoruSekine/setup-scoop@main
         with:
           buckets: extras
           apps: -foobar
         continue-on-error: true
 
-      - if: inputs.target == 'release'
+      - id: release
+        if: inputs.target == 'release'
         uses: MinoruSekine/setup-scoop@v4.0.2
         with:
           buckets: extras
           apps: -foobar
         continue-on-error: true
+
+      - if: >-
+          ${{
+            steps.pr.outcome == 'success' ||
+            steps.dev.outcome == 'success' ||
+            steps.release.outcome == 'success'
+          }}
+        run: >-
+          Write-Error "${{ github.job }} hasn't been prevented."
+          -ErrorAction Stop
+        shell: pwsh
 
   # `buckets` parameter tests.
   illegal_bucket_name:
@@ -60,24 +74,38 @@ jobs:
       - if: inputs.target == 'pr'
         uses: actions/checkout@v6
 
-      - if: inputs.target == 'pr'
+      - id: pr
+        if: inputs.target == 'pr'
         name: Run actions locally
         uses: ./
         with:
           buckets: java -add
         continue-on-error: true
 
-      - if: inputs.target == 'dev'
+      - id: dev
+        if: inputs.target == 'dev'
         uses: MinoruSekine/setup-scoop@main
         with:
           buckets: java -add
         continue-on-error: true
 
-      - if: inputs.target == 'release'
+      - id: release
+        if: inputs.target == 'release'
         uses: MinoruSekine/setup-scoop@v4.0.2
         with:
           buckets: java -add
         continue-on-error: true
+
+      - if: >-
+          ${{
+            steps.pr.outcome == 'success' ||
+            steps.dev.outcome == 'success' ||
+            steps.release.outcome == 'success'
+          }}
+        run: >-
+          Write-Error "${{ github.job }} hasn't been prevented."
+          -ErrorAction Stop
+        shell: pwsh
 
   refuse_unknown_bucket:
     strategy:
@@ -90,7 +118,8 @@ jobs:
       - if: inputs.target == 'pr'
         uses: actions/checkout@v6
 
-      - if: inputs.target == 'pr'
+      - id: pr
+        if: inputs.target == 'pr'
         name: Run actions locally
         uses: ./
         with:
@@ -98,17 +127,30 @@ jobs:
         continue-on-error: true
 
 
-      - if: inputs.target == 'dev'
+      - id: dev
+        if: inputs.target == 'dev'
         uses: MinoruSekine/setup-scoop@main
         with:
           buckets: unknown
         continue-on-error: true
 
-      - if: inputs.target == 'release'
+      - id: release
+        if: inputs.target == 'release'
         uses: MinoruSekine/setup-scoop@v4.0.2
         with:
           buckets: unknown
         continue-on-error: true
+
+      - if: >-
+          ${{
+            steps.pr.outcome == 'success' ||
+            steps.dev.outcome == 'success' ||
+            steps.release.outcome == 'success'
+          }}
+        run: >-
+          Write-Error "${{ github.job }} hasn't been prevented."
+          -ErrorAction Stop
+        shell: pwsh
 
   # `run_as_admin` tests.
   GitHub_default_runner_without_RunAsAdmin:
@@ -122,24 +164,38 @@ jobs:
       - if: inputs.target == 'pr'
         uses: actions/checkout@v6
 
-      - if: inputs.target == 'pr'
+      - id: pr
+        if: inputs.target == 'pr'
         name: Run actions locally
         uses: ./
         with:
           run_as_admin: false
         continue-on-error: true
 
-      - if: inputs.target == 'dev'
+      - id: dev
+        if: inputs.target == 'dev'
         uses: MinoruSekine/setup-scoop@main
         with:
           run_as_admin: false
         continue-on-error: true
 
-      - if: inputs.target == 'release'
+      - id: release
+        if: inputs.target == 'release'
         uses: MinoruSekine/setup-scoop@v4.0.2
         with:
           run_as_admin: false
         continue-on-error: true
+
+      - if: >-
+          ${{
+            steps.pr.outcome == 'success' ||
+            steps.dev.outcome == 'success' ||
+            steps.release.outcome == 'success'
+          }}
+        run: >-
+          Write-Error "${{ github.job }} hasn't been prevented."
+          -ErrorAction Stop
+        shell: pwsh
 
   # Obsoleted parameters tests.
   add_extras_bucket:
@@ -153,20 +209,23 @@ jobs:
       - if: inputs.target == 'pr'
         uses: actions/checkout@v6
 
-      - if: inputs.target == 'pr'
+      - id: pr
+        if: inputs.target == 'pr'
         name: Run actions locally
         uses: ./
         with:
           add_extras_bucket: 'true'
         continue-on-error: true
 
-      - if: inputs.target == 'dev'
+      - id: dev
+        if: inputs.target == 'dev'
         uses: MinoruSekine/setup-scoop@main
         with:
           add_extras_bucket: 'true'
         continue-on-error: true
 
-      - if: inputs.target == 'release'
+      - id: release
+        if: inputs.target == 'release'
         uses: MinoruSekine/setup-scoop@v4.0.2
         with:
           add_extras_bucket: 'true'
@@ -179,6 +238,17 @@ jobs:
             Write-Error "Unexpected extras bucket found." -ErrorAction Stop
           }
 
+      - if: >-
+          ${{
+            steps.pr.outcome == 'success' ||
+            steps.dev.outcome == 'success' ||
+            steps.release.outcome == 'success'
+          }}
+        run: >-
+          Write-Error "${{ github.job }} hasn't been prevented."
+          -ErrorAction Stop
+        shell: pwsh
+
   add_nonportable_bucket:
     strategy:
       matrix:
@@ -190,20 +260,23 @@ jobs:
       - if: inputs.target == 'pr'
         uses: actions/checkout@v6
 
-      - if: inputs.target == 'pr'
+      - id: pr
+        if: inputs.target == 'pr'
         name: Run actions locally
         uses: ./
         with:
           add_nonportable_bucket: 'true'
         continue-on-error: true
 
-      - if: inputs.target == 'dev'
+      - id: dev
+        if: inputs.target == 'dev'
         uses: MinoruSekine/setup-scoop@main
         with:
           add_nonportable_bucket: 'true'
         continue-on-error: true
 
-      - if: inputs.target == 'release'
+      - id: release
+        if: inputs.target == 'release'
         uses: MinoruSekine/setup-scoop@v4.0.2
         with:
           add_nonportable_bucket: 'true'
@@ -215,3 +288,14 @@ jobs:
           if([bool](scoop bucket list | Select-String -Quiet "nonportable")) {
             Write-Error "Unexpected nonportable bucket found." -ErrorAction Stop
           }
+
+      - if: >-
+          ${{
+            steps.pr.outcome == 'success' ||
+            steps.dev.outcome == 'success' ||
+            steps.release.outcome == 'success'
+          }}
+        run: >-
+          Write-Error "${{ github.job }} hasn't been prevented."
+          -ErrorAction Stop
+        shell: pwsh
