@@ -21,7 +21,17 @@ jobs:
         with:
           path: .\scripts\
           recurse: true
-          output: results.sarif
+          output: psscriptanalyzer.sarif
+
+      - uses: astral-sh/setup-uv@v7.2.0
+
+      - name: Run sarif2gha
+        run: |
+          uvx --from `
+          git+https://github.com/MinoruSekine/sarif2gha.git@abbea6e `
+          sarif2gha `
+          --project-root-dir="${{ github.workspace }}" psscriptanalyzer.sarif
+        shell: pwsh
 
   YAMLLint:
     runs-on: ubuntu-latest
