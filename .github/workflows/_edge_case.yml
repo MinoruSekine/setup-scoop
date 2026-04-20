@@ -173,7 +173,10 @@ jobs:
         shell: pwsh
 
   # `run_as_admin` tests.
-  GitHub_default_runner_without_RunAsAdmin:
+  # Latest install script of scoop has workaround for GitHub Actions,
+  # so RunAsAdmin isn't necessary
+  # to install to GitHub Actions default Windows runner.
+  GitHub_default_runner_doesnt_need_RunAsAdmin:
     needs: validate_inputs_target
 
     strategy:
@@ -192,32 +195,18 @@ jobs:
         uses: ./
         with:
           run_as_admin: false
-        continue-on-error: true
 
       - id: dev
         if: inputs.target == 'dev'
         uses: MinoruSekine/setup-scoop@main
         with:
           run_as_admin: false
-        continue-on-error: true
 
       - id: release
         if: inputs.target == 'release'
         uses: MinoruSekine/setup-scoop@v4.0.2
         with:
           run_as_admin: false
-        continue-on-error: true
-
-      - if: >-
-          ${{
-            steps.pr.outcome == 'success' ||
-            steps.dev.outcome == 'success' ||
-            steps.release.outcome == 'success'
-          }}
-        run: >-
-          Write-Error "${{ github.job }} hasn't been prevented."
-          -ErrorAction Stop
-        shell: pwsh
 
   # Obsoleted parameters tests.
   add_extras_bucket:
