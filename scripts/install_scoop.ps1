@@ -1,6 +1,8 @@
-param([switch]$RunAsAdmin)
-if ($RunAsAdmin) {
-    iex "& {$(irm get.scoop.sh)} -RunAsAdmin"
+param([switch]$ForceAdmin)
+
+$install_script = [scriptblock]::Create((Invoke-RestMethod -Uri https://get.scoop.sh))
+if ($ForceAdmin) {
+    & $install_script -RunAsAdmin
 } else {
-    irm get.scoop.sh | iex
+    & $install_script
 }

@@ -55,7 +55,7 @@ runs:
       run: |
         if('${{ inputs.install_scoop }}' -eq 'true') {
             if('${{ inputs.run_as_admin }}' -eq 'true') {
-                ${{ env.SCRIPTS_PATH }}\install_scoop.ps1 -RunAsAdmin
+                ${{ env.SCRIPTS_PATH }}\install_scoop.ps1 -ForceAdmin
             } else {
                 ${{ env.SCRIPTS_PATH }}\install_scoop.ps1
             }

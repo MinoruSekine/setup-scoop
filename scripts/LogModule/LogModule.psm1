@@ -1,3 +1,3 @@
 Function WriteSetupScoopLog([string]$LogMessage) {
-    Write-Host setup-scoop: $LogMessage
+    Write-Information "setup-scoop: $LogMessage" -InformationAction Continue
 }
