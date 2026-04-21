@@ -1,0 +1,17 @@
+---
+
+name: Tests (dev)
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: 0 6 * * 5
+  workflow_dispatch:
+
+jobs:
+  tests:
+    uses: ./.github/workflows/_tests.yml
+    with:
+      target: 'dev'

@@ -1,0 +1,56 @@
+---
+
+name: Tests common parts (reusable workflow)
+
+on:
+  workflow_call:
+    inputs:
+      target:
+        description: |
+          Workflow target.
+          - "dev": HEAD of dev branch
+          - "pr": PR
+        required: true
+        type: string
+
+jobs:
+  validate_inputs_target:
+    runs-on: windows-latest
+    steps:
+      - if: >-
+          ${{
+            inputs.target != 'pr' &&
+            inputs.target != 'dev'
+          }}
+        run: >-
+          Write-Error "Unsupported target ${{ inputs.target }}"
+          -ErrorAction Stop
+        shell: pwsh
+
+  Pester:
+    needs: validate_inputs_target
+
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out default branch
+        uses: actions/checkout@v6
+
+      - name: Install sccop and add extras bucket by running actions locally
+        uses: ./
+        with:
+          buckets: extras
+
+      - name: Install and Update Pester
+        shell: pwsh
+        run: |
+          # Force install latest Pester to avoid confliction to preinstalled
+          Install-Module -Name Pester -Force -SkipPublisherCheck `
+          -Scope CurrentUser
+
+      - name: Run Pester tests
+        shell: pwsh
+        run: |
+          # Explicitly import Pester 5.0.0 or later
+          Import-Module Pester -MinimumVersion 5.0.0
+          Invoke-Pester -Path ./scripts/AppNameModule/
