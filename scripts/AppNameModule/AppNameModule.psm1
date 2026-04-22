@@ -1,3 +1,3 @@
 Function IsAppNameValid([string]$AppName) {
-    return $AppName -imatch "^\w[\w/.@-]*$"
+    return $AppName -imatch "\A\w[\w/.@-]*\z"
 }

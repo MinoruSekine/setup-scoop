@@ -32,6 +32,7 @@ Describe 'IsAppNameValid' {
         It 'App name <name> should be invalid' -ForEach @(
             @{ name = "-foo" }
             @{ name = "foo*bar" }
+            @{ name = "foo`n" }
         ) {
             IsAppNameValid $name | Should -Be $false
         }
