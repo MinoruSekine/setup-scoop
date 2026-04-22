@@ -13,7 +13,7 @@ if ($apps_string) {
 }
 WriteSetupScoopLog "apps: ${apps}"
 foreach($app in $apps) {
-    if (IsAppNameValid $app) {
+    if (-not (IsAppNameValid $app)) {
         Write-Error "Illegal app name `"$app`"." -ErrorAction Stop
     }
     WriteSetupScoopLog "Installing `"${app}`""
