@@ -26,6 +26,7 @@ Describe 'IsAppNameValid' {
             @{ name = "foo" }
             @{ name = "FooBar" }
             @{ name = "Foo-Bar" }
+            @{ name = "g" }
         ) {
             IsAppNameValid $name | Should -Be $true
         }
