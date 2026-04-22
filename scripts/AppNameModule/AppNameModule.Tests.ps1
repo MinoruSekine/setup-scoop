@@ -4,9 +4,12 @@ Describe 'IsAppNameValid' {
 
 
     Context 'AppsInKnownBucket' {
-        $apps = scoop search | Where-Object { $_.Name } | ForEach-Object {
-            @{ Name = $_.Name }
-        }
+         $apps = @(scoop search | Where-Object { $_.Name } | ForEach-Object {
+             @{ Name = $_.Name }
+         })
+        if ($apps.Count -eq 0) {
+            throw "No app names were discovered from 'scoop search'."
+         }
         It 'Validation should pass for <Name>' -ForEach $apps {
             $result = IsAppNameValid $Name
 
