@@ -42,7 +42,7 @@ inputs:
   run_as_admin:
     description: 'Install scoop with `-RunAsAdmin` or not'
     required: false
-    default: true
+    default: 'true'
   apps:
     description: 'Apps to be installed'
     required: false
