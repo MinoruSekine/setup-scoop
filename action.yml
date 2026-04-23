@@ -12,16 +12,6 @@ inputs:
     description: 'Install scoop if true (default)'
     required: true
     default: 'true'
-  add_extras_bucket:
-    deprecationMessage: 'This is obsoleted and use `buckets: extras`'
-    description: 'This is obsoleted and use `buckets: extras`'
-    required: true
-    default: 'false'
-  add_nonportable_bucket:
-    deprecationMessage: 'This is obsoleted and use `buckets: nonportable`'
-    description: 'This is obsoleted and use `buckets: nonportable`'
-    required: true
-    default: 'false'
   scoop_update:
     description: 'Call scoop update if true (default)'
     required: true
@@ -64,14 +54,6 @@ runs:
         if($env:UPDATE_PATH -eq 'true') {
             Join-Path (Resolve-Path ~).Path "scoop\shims" >> $Env:GITHUB_PATH
         }
-        if($env:ADD_EXTRAS_BUCKET -eq 'true') {
-            Write-Error 'setup-scoop: `add_extras_bucket`' `
-            ' is now obsoleted, use `buckets` instead.' -ErrorAction Stop
-        }
-        if($env:ADD_NONPORTABLE_BUCKET -eq 'true') {
-            Write-Error 'setup-scoop: `add_nonportable_bucket`' `
-            'is now obsoleted, use `buckets` instead.' -ErrorAction Stop
-        }
         Write-Host "setup-scoop: inputs.buckets $env:BUCKETS"
         if ($env:BUCKETS) {
             & "$env:SCRIPTS_PATH\add_buckets.ps1" "$env:BUCKETS"
@@ -85,8 +67,6 @@ runs:
       env:
         SCRIPTS_PATH: ${{ github.action_path }}\scripts
         INSTALL_SCOOP: ${{ inputs.install_scoop }}
-        ADD_EXTRAS_BUCKET: ${{ inputs.add_extras_bucket }}
-        ADD_NONPORTABLE_BUCKET: ${{ inputs.add_nonportable_bucket }}
         SCOOP_UPDATE: ${{ inputs.scoop_update }}
         SCOOP_CHECKUP: ${{ inputs.scoop_checkup }}
         UPDATE_PATH: ${{ inputs.update_path }}
