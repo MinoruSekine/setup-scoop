@@ -42,7 +42,7 @@ inputs:
   run_as_admin:
     description: 'Install scoop with `-RunAsAdmin` or not'
     required: false
-    default: true
+    default: 'true'
   apps:
     description: 'Apps to be installed'
     required: false
@@ -53,36 +53,43 @@ runs:
     - name: 'Setup scoop'
       shell: pwsh
       run: |
-        if('${{ inputs.install_scoop }}' -eq 'true') {
-            if('${{ inputs.run_as_admin }}' -eq 'true') {
-                ${{ env.SCRIPTS_PATH }}\install_scoop.ps1 -ForceAdmin
+        if($env:INSTALL_SCOOP -eq 'true') {
+            if($env:RUN_AS_ADMIN -eq 'true') {
+                & "$env:SCRIPTS_PATH\install_scoop.ps1" -ForceAdmin
             } else {
-                ${{ env.SCRIPTS_PATH }}\install_scoop.ps1
+                & "$env:SCRIPTS_PATH\install_scoop.ps1"
             }
             scoop --version
         }
-        if('${{ inputs.update_path }}' -eq 'true') {
+        if($env:UPDATE_PATH -eq 'true') {
             Join-Path (Resolve-Path ~).Path "scoop\shims" >> $Env:GITHUB_PATH
         }
-        if('${{ inputs.add_extras_bucket }}' -eq 'true') {
+        if($env:ADD_EXTRAS_BUCKET -eq 'true') {
             Write-Error 'setup-scoop: `add_extras_bucket`' `
             ' is now obsoleted, use `buckets` instead.' -ErrorAction Stop
         }
-        if('${{ inputs.add_nonportable_bucket }}' -eq 'true') {
+        if($env:ADD_NONPORTABLE_BUCKET -eq 'true') {
             Write-Error 'setup-scoop: `add_nonportable_bucket`' `
             'is now obsoleted, use `buckets` instead.' -ErrorAction Stop
         }
-        Write-Host 'setup-scoop: inputs.buckets ${{ inputs.buckets }}'
-        $param_buckets_string = "${{ inputs.buckets }}"
-        if ($param_buckets_string) {
-            ${{ env.SCRIPTS_PATH }}\add_buckets.ps1 "$param_buckets_string"
+        Write-Host "setup-scoop: inputs.buckets $env:BUCKETS"
+        if ($env:BUCKETS) {
+            & "$env:SCRIPTS_PATH\add_buckets.ps1" "$env:BUCKETS"
         }
-        if('${{ inputs.scoop_update }}' -eq 'true') {scoop update}
-        if('${{ inputs.scoop_checkup }}' -eq 'true') {scoop checkup}
-        Write-Host 'setup-scoop: inputs.apps ${{ inputs.apps }}'
-        $param_apps_string = "${{ inputs.apps }}"
-        if ($param_apps_string) {
-            ${{ env.SCRIPTS_PATH }}\install_apps.ps1 "$param_apps_string"
+        if($env:SCOOP_UPDATE -eq 'true') {scoop update}
+        if($env:SCOOP_CHECKUP -eq 'true') {scoop checkup}
+        Write-Host "setup-scoop: inputs.apps $env:APPS"
+        if ($env:APPS) {
+            & "$env:SCRIPTS_PATH\install_apps.ps1" "$env:APPS"
         }
       env:
         SCRIPTS_PATH: ${{ github.action_path }}\scripts
+        INSTALL_SCOOP: ${{ inputs.install_scoop }}
+        ADD_EXTRAS_BUCKET: ${{ inputs.add_extras_bucket }}
+        ADD_NONPORTABLE_BUCKET: ${{ inputs.add_nonportable_bucket }}
+        SCOOP_UPDATE: ${{ inputs.scoop_update }}
+        SCOOP_CHECKUP: ${{ inputs.scoop_checkup }}
+        UPDATE_PATH: ${{ inputs.update_path }}
+        BUCKETS: ${{ inputs.buckets }}
+        RUN_AS_ADMIN: ${{ inputs.run_as_admin }}
+        APPS: ${{ inputs.apps }}
