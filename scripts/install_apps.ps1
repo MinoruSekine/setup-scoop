@@ -17,5 +17,5 @@ foreach($app in $apps) {
         Write-Error "Illegal app name `"$app`"." -ErrorAction Stop
     }
     WriteSetupScoopLog "Installing `"${app}`""
-    scoop install $app
+    & scoop install $app
 }

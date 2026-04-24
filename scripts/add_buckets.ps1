@@ -15,6 +15,6 @@ if ($buckets.count -ge 1) {
             Write-Error "Bucket `"$bucket`" is unknown." -ErrorAction Stop
         }
         WriteSetupScoopLog "Adding `"${bucket}`" bucket"
-        scoop bucket add $bucket
+        & scoop bucket add $bucket
     }
 }

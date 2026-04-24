@@ -43,29 +43,9 @@ runs:
     - name: 'Setup scoop'
       shell: pwsh
       run: |
-        if($env:INSTALL_SCOOP -eq 'true') {
-            if($env:RUN_AS_ADMIN -eq 'true') {
-                & "$env:SCRIPTS_PATH\install_scoop.ps1" -ForceAdmin
-            } else {
-                & "$env:SCRIPTS_PATH\install_scoop.ps1"
-            }
-            scoop --version
-        }
-        if($env:UPDATE_PATH -eq 'true') {
-            Join-Path (Resolve-Path ~).Path "scoop\shims" >> $Env:GITHUB_PATH
-        }
-        Write-Host "setup-scoop: inputs.buckets $env:BUCKETS"
-        if ($env:BUCKETS) {
-            & "$env:SCRIPTS_PATH\add_buckets.ps1" "$env:BUCKETS"
-        }
-        if($env:SCOOP_UPDATE -eq 'true') {scoop update}
-        if($env:SCOOP_CHECKUP -eq 'true') {scoop checkup}
-        Write-Host "setup-scoop: inputs.apps $env:APPS"
-        if ($env:APPS) {
-            & "$env:SCRIPTS_PATH\install_apps.ps1" "$env:APPS"
-        }
+        & $env:ENTRY_POINT_PS1
       env:
-        SCRIPTS_PATH: ${{ github.action_path }}\scripts
+        ENTRY_POINT_PS1: ${{ github.action_path }}/scripts/entry_point.ps1
         INSTALL_SCOOP: ${{ inputs.install_scoop }}
         SCOOP_UPDATE: ${{ inputs.scoop_update }}
         SCOOP_CHECKUP: ${{ inputs.scoop_checkup }}
