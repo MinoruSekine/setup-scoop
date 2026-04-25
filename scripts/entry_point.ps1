@@ -11,14 +11,14 @@ if($env:INSTALL_SCOOP -eq 'true') {
 if($env:UPDATE_PATH -eq 'true') {
     Join-Path (Resolve-Path ~).Path "scoop\shims" >> $Env:GITHUB_PATH
 }
-WriteSetupScoopLog "env:BUCKETS $env:BUCKETS"
+Write-SetupScoopLog "env:BUCKETS $env:BUCKETS"
 if ($env:BUCKETS) {
     & "$($PSScriptRoot)\add_buckets.ps1" "$env:BUCKETS"
 }
 if($env:SCOOP_UPDATE -eq 'true') { & scoop update }
 if($env:SCOOP_CHECKUP -eq 'true') { & scoop checkup }
-WriteSetupScoopLog "env:APPS $env:APPS"
+Write-SetupScoopLog "env:APPS $env:APPS"
 if ($env:APPS) {
-    WriteSetupScoopLog "Calling install_apps.ps1..."
+    Write-SetupScoopLog "Calling install_apps.ps1..."
     & "$($PSScriptRoot)\install_apps.ps1" "$env:APPS"
 }

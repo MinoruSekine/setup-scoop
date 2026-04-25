@@ -1,4 +1,4 @@
-Describe 'IsAppNameValid' {
+Describe 'Test-AppName' {
     $modulePath = Join-Path $PSScriptRoot "AppNameModule.psm1"
     Import-Module $modulePath -Force
 
@@ -11,7 +11,7 @@ Describe 'IsAppNameValid' {
             throw "No app names were discovered from 'scoop search'."
          }
         It 'Validation should pass for <Name>' -ForEach $apps {
-            $result = IsAppNameValid $Name
+            $result = Test-AppName $Name
 
             if ($result -eq $false) {
                 Write-Warning "Validation failed for app: [$Name]"
@@ -28,14 +28,14 @@ Describe 'IsAppNameValid' {
             @{ name = "Foo-Bar" }
             @{ name = "g" }
         ) {
-            IsAppNameValid $name | Should -Be $true
+            Test-AppName $name | Should -Be $true
         }
         It 'App name <name> should be invalid' -ForEach @(
             @{ name = "-foo" }
             @{ name = "foo*bar" }
             @{ name = "foo`n" }
         ) {
-            IsAppNameValid $name | Should -Be $false
+            Test-AppName $name | Should -Be $false
         }
     }
 }
