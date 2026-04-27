@@ -126,7 +126,7 @@ jobs:
   # Install apps check
   install_apps:
     env:
-      TEST_TARGET_APPS: "doxygen fclones xh"
+      TEST_TARGET_APPS: "fclones jq xh"
 
     strategy:
       matrix:
