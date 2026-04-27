@@ -8,7 +8,8 @@ function Invoke-External {
         [string[]]$parameters = @()
     )
 
-    if (-not $env:SETUP_SCOOP_DRYRUN) {
+    # Set SETUP_SCOOP_DRYRUN to 'true' or '1' to enable dry-run mode for local debugging.
+    if ($env:SETUP_SCOOP_DRYRUN -notin @('true', '1')) {
         & $command @parameters
 
         # This function doesn't care command
