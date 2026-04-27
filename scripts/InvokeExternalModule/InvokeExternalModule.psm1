@@ -12,8 +12,8 @@ function Invoke-External {
     if ($env:SETUP_SCOOP_DRYRUN -notin @('true', '1')) {
         & $command @parameters
 
-        # This function doesn't care command
-        # which returns non-zero exit codes at successful.
+        # This function doesn't support command
+        # which returns non-zero exit codes at successful (e.g. diff).
         if (-not $?) {
             Write-Error """$command $($parameters -join ' ')"" failed." `
               -ErrorAction Stop

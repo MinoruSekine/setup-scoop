@@ -10,6 +10,9 @@ if ($buckets_string) {
 }
 Write-SetupScoopLog "buckets: ${buckets}"
 if ($buckets.count -ge 1) {
+    # Next line needs outputs through PowerShell pipeline,
+    # so Invoke-External will not be suitable for here.
+    # Note: SETUP_SCOOP_DRYRUN will not be effected here.
     $known_buckets=& scoop bucket known
     if (-not $?) {
         Write-Error "Failed to get known buckets by ""scoop bucket known""." `
