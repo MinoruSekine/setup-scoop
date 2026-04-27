@@ -20,7 +20,7 @@ function Invoke-External {
         }
     } else {
         # Dry run.
-        Write-Information "Dry-run: $command $parameters" `
+        Write-Information "Dry-run: $command $($parameters -join ' ')" `
           -InformationAction Continue
     }
 }
