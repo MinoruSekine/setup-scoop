@@ -3,8 +3,9 @@ param(
     [string]$apps_string = $(throw "apps parameter is necessary.")
 )
 
-Import-Module "$($PSScriptRoot)\LogModule"
 Import-Module "$($PSScriptRoot)\AppNameModule"
+Import-Module "$($PSScriptRoot)\InvokeExternalModule"
+Import-Module "$($PSScriptRoot)\LogModule"
 
 Write-SetupScoopLog "parameter: ${apps_string}"
 [string[]] $apps = @()
@@ -17,5 +18,5 @@ foreach($app in $apps) {
         Write-Error "Illegal app name `"$app`"." -ErrorAction Stop
     }
     Write-SetupScoopLog "Installing `"${app}`""
-    & scoop install $app
+    Invoke-External -Command "scoop" -Parameters "install", "$app"
 }
