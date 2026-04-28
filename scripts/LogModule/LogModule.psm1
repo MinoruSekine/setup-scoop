@@ -11,3 +11,5 @@ function Write-SetupScoopLog {
     )
     Write-Information "setup-scoop: $LogMessage" -InformationAction Continue
 }
+
+Export-ModuleMember -Function 'Write-SetupScoopLog'
