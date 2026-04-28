@@ -43,3 +43,5 @@ function Invoke-External {
           -InformationAction Continue
     }
 }
+
+Export-ModuleMember -Function 'Invoke-External'

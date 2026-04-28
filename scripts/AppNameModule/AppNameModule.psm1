@@ -17,3 +17,5 @@ function Test-AppName {
     )
     return $AppName -imatch "\A\w[\w/.@-]*\z"
 }
+
+Export-ModuleMember -Function 'Test-AppName'
