@@ -1,3 +1,8 @@
+<#
+.SYNOPSIS
+
+Write log string to information stream with prefix.
+#>
 function Write-SetupScoopLog {
     [CmdletBinding()]
     param(

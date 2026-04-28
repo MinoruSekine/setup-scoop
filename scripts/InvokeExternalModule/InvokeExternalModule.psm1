@@ -1,3 +1,22 @@
+<#
+.SYNOPSIS
+
+Invoke external commands and abort if an error occurred.
+
+.DESCRIPTION
+
+Invoke external application, scripts, or cmdlet.
+If error will occur in them,
+write message to error stream and abort.
+
+.NOTES
+
+This doesn't support commands that return non-zero values on success.
+
+If environment variable `SETUP_SCOOP_DRYRUN` is set to 'true' or '1',
+this writes command and parameters to information stream
+instead of invoking command.
+#>
 function Invoke-External {
     [CmdletBinding()]
     param(

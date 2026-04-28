@@ -1,3 +1,13 @@
+<#
+.SYNOPSIS
+
+Test given string is a legal application name in scoop.
+
+.DESCRIPTION
+
+Test given string is a legal application name in scoop
+by regex.
+#>
 function Test-AppName {
     [CmdletBinding()]
     [OutputType([bool])]
