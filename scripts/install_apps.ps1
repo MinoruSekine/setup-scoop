@@ -3,9 +3,9 @@ param(
     [string]$apps_string = $(throw "apps parameter is necessary.")
 )
 
-Import-Module "$($PSScriptRoot)\AppNameModule"
-Import-Module "$($PSScriptRoot)\InvokeExternalModule"
-Import-Module "$($PSScriptRoot)\LogModule"
+Import-Module (Join-Path $($PSScriptRoot) "modules/Invoke-External")
+Import-Module (Join-Path $($PSScriptRoot) "modules/Test-Params")
+Import-Module (Join-Path $($PSScriptRoot) "modules/Write-SetupScoopLog")
 
 Write-SetupScoopLog "parameter: ${apps_string}"
 [string[]] $apps = @()

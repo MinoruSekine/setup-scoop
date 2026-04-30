@@ -1,5 +1,5 @@
-Import-Module "$($PSScriptRoot)\InvokeExternalModule"
-Import-Module "$($PSScriptRoot)\LogModule"
+Import-Module (Join-Path $($PSScriptRoot) "modules/Invoke-External")
+Import-Module (Join-Path $($PSScriptRoot) "modules/Write-SetupScoopLog")
 
 if($env:INSTALL_SCOOP -eq 'true') {
     if($env:RUN_AS_ADMIN -eq 'true') {
