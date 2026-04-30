@@ -1,7 +1,7 @@
 param([string]$buckets_string)
 
-Import-Module "$($PSScriptRoot)\InvokeExternalModule"
-Import-Module "$($PSScriptRoot)\LogModule"
+Import-Module (Join-Path $($PSScriptRoot) "modules/Invoke-External")
+Import-Module (Join-Path $($PSScriptRoot) "modules/Write-SetupScoopLog")
 
 Write-SetupScoopLog "parameter: ${buckets_string}"
 [string[]] $buckets = @()
