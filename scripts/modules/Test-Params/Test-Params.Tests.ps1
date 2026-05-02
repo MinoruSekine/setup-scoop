@@ -1,5 +1,5 @@
 Describe 'Test-AppName' {
-    $modulePath = Join-Path $PSScriptRoot "AppNameModule.psm1"
+    $modulePath = Join-Path $PSScriptRoot "Test-Params.psm1"
     Import-Module $modulePath -Force
 
 
