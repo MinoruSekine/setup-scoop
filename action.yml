@@ -29,6 +29,10 @@ inputs:
     description: 'Bucket(s) to add, delimit several buckets by white space'
     required: false
     default: ''
+  custom_buckets:
+    description: 'Add bucket(s) by one "name repo-url" pair per line'
+    required: false
+    default: ''
   run_as_admin:
     description: 'Install scoop with `-RunAsAdmin` or not'
     required: false
@@ -51,5 +55,6 @@ runs:
         SCOOP_CHECKUP: ${{ inputs.scoop_checkup }}
         UPDATE_PATH: ${{ inputs.update_path }}
         BUCKETS: ${{ inputs.buckets }}
+        CUSTOM_BUCKETS: ${{ inputs.custom_buckets }}
         RUN_AS_ADMIN: ${{ inputs.run_as_admin }}
         APPS: ${{ inputs.apps }}

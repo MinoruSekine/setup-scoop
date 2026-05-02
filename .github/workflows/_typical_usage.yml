@@ -123,6 +123,50 @@ jobs:
             }
           }
 
+  # `custom_buckets` parameter check
+  add_multiple_custom_buckets:
+    env:
+      TEST_TARGET_APPS: win-toast-cli
+      # yamllint disable rule:line-length
+      TEST_TARGET_REPOS: |
+        setup-scoop https://github.com/MinoruSekine/setup-scoop.git
+        MinoruSekine https://github.com/MinoruSekine/scoop-bucket-MinoruSekine.git
+      # yamllint enable rule:line-length
+
+    strategy:
+      matrix:
+        os: [windows-2025, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - if: inputs.target == 'pr'
+        uses: actions/checkout@v6
+
+      - if: inputs.target == 'pr'
+        name: Run actions locally
+        uses: ./
+        with:
+          custom_buckets: ${{ env.TEST_TARGET_REPOS }}
+          apps: ${{ env.TEST_TARGET_APPS }}
+
+      - if: inputs.target == 'dev'
+        uses: MinoruSekine/setup-scoop@main
+        with:
+          custom_buckets: ${{ env.TEST_TARGET_REPOS }}
+          apps: ${{ env.TEST_TARGET_APPS }}
+
+      - name: Validate expected buckets are available
+        if: inputs.target == 'pr' || inputs.target == 'dev'
+        shell: pwsh
+        run: |
+          $buckets = @("setup-scoop", "MinoruSekine")
+          foreach($bucket in $buckets) {
+            if(-Not [bool](scoop bucket list | Select-String -Quiet $bucket)) {
+              Write-Error "`"$bucket`" bucket not found." -ErrorAction Stop
+            }
+          }
+
   # Install apps check
   install_apps:
     env:
