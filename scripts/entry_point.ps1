@@ -15,8 +15,15 @@ if($env:UPDATE_PATH -eq 'true') {
 }
 Write-SetupScoopLog "env:BUCKETS $env:BUCKETS"
 if ($env:BUCKETS) {
-    Invoke-External -Command "$($PSScriptRoot)\add_buckets.ps1" `
+    Invoke-External -Command "$($PSScriptRoot)\add_known_buckets.ps1" `
       -Parameters "$env:BUCKETS"
+}
+# CUSTOM_BUCKETS shouldn't be output to log,
+# because it can be include HTTPS PAT or some secrets.
+Write-SetupScoopLog "env:CUSTOM_BUCKETS is_set=$([bool]$env:CUSTOM_BUCKETS)"
+if ($env:CUSTOM_BUCKETS) {
+    Invoke-External -Command "$($PSScriptRoot)\add_custom_buckets.ps1" `
+      -Parameters "$env:CUSTOM_BUCKETS"
 }
 if($env:SCOOP_UPDATE -eq 'true') {
     Invoke-External -Command "scoop" -Parameters "update"

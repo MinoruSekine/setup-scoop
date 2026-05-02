@@ -65,7 +65,39 @@
   - Delimit several buckets by white space like as `extras nonportable games`
   - Bucket(s) specified by this parameter must be "known" buckets,
     you can confirm them by `scoop bucket known` command
-- This parameter is optional, no extra buckets will be added if omitted
+- This parameter is optional, no extra known buckets will be added if omitted
+
+### `custom_buckets`
+
+> [!IMPORTANT]
+> This is available in v5 or later.
+
+- Specify not-known-bucket(s) to add by URL
+  - Custom buckets as "name repo_url" pairs, one per line
+  - This parameter only supports URL-styled repo (e.g. https, ssh, git, ...)
+- This parameter is optional, no extra custom buckets will be added if omitted
+
+> [!WARNING]
+> If a repo URL contains authentication credentials
+> (e.g.,
+> `https://${{ secrets.MY_PAT }}@github.com/user/private-repo.git`),
+> always use `${{ secrets.* }}` to reference the token so it is automatically
+> masked in workflow logs. Never hardcode a PAT directly in the workflow YAML.
+>
+> If you must hide repo URL completely in your workflow log,
+> please use `::add-mask` in your workflow.
+> See
+> [Workflow commands for GitHub Actions](https://docs.github.com/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#masking-a-value-in-a-log)
+> for details.
+
+#### Example
+
+```YAML
+        with:
+          custom_buckets: |
+            my-bucket https://github.com/UserName/bucket.git
+            mybucket2 https://github.com/UserName/bucket2.git
+```
 
 ### `apps`
 

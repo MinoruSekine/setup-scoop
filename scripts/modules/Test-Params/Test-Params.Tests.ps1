@@ -39,3 +39,63 @@ Describe 'Test-AppName' {
         }
     }
 }
+
+Describe 'Test-BucketName' {
+    $modulePath = Join-Path $PSScriptRoot "Test-Params.psm1"
+    Import-Module $modulePath -Force
+
+
+    Context 'ValidName' {
+        It 'Bucket name <name> should be valid' -ForEach @(
+            @{ name = 'bar' }
+            @{ name = 'barbar' }
+            @{ name = 'bar-' }
+            @{ name = 'bar-bar' }
+        ) {
+            Test-BucketName $name | Should -Be $true
+        }
+    }
+
+    Context 'NameStartingWithDash' {
+        It 'Bucket name <name> should be invalid' -ForEach @(
+            @{ name = '-' }
+            @{ name = '--' }
+            @{ name = '-bar' }
+            @{ name = '--bar' }
+        ) {
+            Test-BucketName $name | Should -Be $false
+        }
+    }
+}
+
+Describe 'Test-BucketRepoUrl' {
+    $modulePath = Join-Path $PSScriptRoot "Test-Params.psm1"
+    Import-Module $modulePath -Force
+
+
+    Context 'ValidRepo' {
+        It 'Bucket remote repo <repo> should be valid' -ForEach @(
+            @{ repo = 'https://github.com/MinoruSekine/setup-scoop.git' }
+            @{ repo = 'git@github.com:MinoruSekine/setup-scoop.git' }
+        ) {
+            Test-BucketRepoUrl $repo | Should -Be $true
+        }
+    }
+
+    Context 'InvalidRepo' {
+        It 'Bucket remote repo <repo> should be invalid' -ForEach @(
+            @{ repo = '-' }
+            @{ repo = '--' }
+            @{ repo = '-bar' }
+            @{ repo = '--bar' }
+            @{ repo = '/' } # Local paths will be supported by another way.
+            @{ repo = './local-bucket' }
+            @{ repo = '../local-bucket' }
+            @{ repo = 'tmp/local-bucket' }
+            @{ repo = $PSScriptRoot }
+            @{ repo = $PSScriptRoot -replace '\\', '/' }
+        ) {
+            Test-BucketRepoUrl $repo | Should -Be $false
+        }
+    }
+}
