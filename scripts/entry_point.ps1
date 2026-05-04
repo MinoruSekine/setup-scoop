@@ -1,5 +1,4 @@
 Import-Module (Join-Path $($PSScriptRoot) "modules/Invoke-External")
-Import-Module (Join-Path $($PSScriptRoot) "modules/Write-SetupScoopLog")
 
 if($env:INSTALL_SCOOP -eq 'true') {
     if($env:RUN_AS_ADMIN -eq 'true') {
@@ -13,14 +12,12 @@ if($env:INSTALL_SCOOP -eq 'true') {
 if($env:UPDATE_PATH -eq 'true') {
     Join-Path (Resolve-Path ~).Path "scoop\shims" >> $Env:GITHUB_PATH
 }
-Write-SetupScoopLog "env:BUCKETS $env:BUCKETS"
 if ($env:BUCKETS) {
     Invoke-External -Command "$($PSScriptRoot)\add_known_buckets.ps1" `
       -Parameters "$env:BUCKETS"
 }
 # CUSTOM_BUCKETS shouldn't be output to log,
 # because it can be include HTTPS PAT or some secrets.
-Write-SetupScoopLog "env:CUSTOM_BUCKETS is_set=$([bool]$env:CUSTOM_BUCKETS)"
 if ($env:CUSTOM_BUCKETS) {
     Invoke-External -Command "$($PSScriptRoot)\add_custom_buckets.ps1" `
       -Parameters "$env:CUSTOM_BUCKETS"
@@ -31,9 +28,7 @@ if($env:SCOOP_UPDATE -eq 'true') {
 if($env:SCOOP_CHECKUP -eq 'true') {
     Invoke-External -Command "scoop" -Parameters "checkup"
 }
-Write-SetupScoopLog "env:APPS $env:APPS"
 if ($env:APPS) {
-    Write-SetupScoopLog "Calling install_apps.ps1..."
     Invoke-External -Command "$($PSScriptRoot)\install_apps.ps1" `
       -Parameters "$env:APPS"
 }
