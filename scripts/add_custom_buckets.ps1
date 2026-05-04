@@ -16,6 +16,11 @@ if ($custom_buckets_string) {
 # shouldn't be output to log,
 # because they can be include HTTPS PAT or some secrets.
 if ($lines.count -ge 1) {
+    Set-Variable `
+      -Name "thisFileName" `
+      -Value (Split-Path -Leaf $PSCommandPath) `
+      -Option Constant `
+      -Scope Local
     $i = 0
     foreach($line in $lines) {
         $i++
@@ -44,7 +49,8 @@ Repo in line $i of $($lines.count) is illegal.
 "@ `
               -ErrorAction Stop
         }
-        Write-SetupScoopLog "Adding ""$name"""
+        Write-SetupScoopLog `
+          "$thisFileName is adding custom bucket ""$name"" ..."
         Invoke-External `
           -Command "scoop" `
           -Parameters @("bucket", "add", "$name", "$repoUrl") `
