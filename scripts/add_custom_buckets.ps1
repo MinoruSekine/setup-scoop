@@ -4,6 +4,12 @@ Import-Module (Join-Path $($PSScriptRoot) "modules/Invoke-External")
 Import-Module (Join-Path $($PSScriptRoot) "modules/Test-Params")
 Import-Module (Join-Path $($PSScriptRoot) "modules/Write-SetupScoopLog")
 
+Set-Variable `
+  -Name "thisFileName" `
+  -Value (Split-Path -Leaf $PSCommandPath) `
+  -Option Constant `
+  -Scope Script
+
 [string[]] $lines = @()
 if ($custom_buckets_string) {
     $lines = (
@@ -12,33 +18,34 @@ if ($custom_buckets_string) {
         | Where-Object { $_ -ne "" }
     )
 }
-# $custom_buckets_string, $lines, $line, and $repoUrl
+# $custom_buckets_string, $lines, $line, $repoUrl, $list, and $list.RepoURL
 # shouldn't be output to log,
 # because they can be include HTTPS PAT or some secrets.
 if ($lines.count -ge 1) {
-    Set-Variable `
-      -Name "thisFileName" `
-      -Value (Split-Path -Leaf $PSCommandPath) `
-      -Option Constant `
-      -Scope Local
-    $i = 0
+    # Validate and construct name and repoUrl pair array.
+    $list = @()
     foreach($line in $lines) {
-        $i++
+        $i = $list.Count + 1
         $found = $line | Select-String '\A(?<name>\S+)\s+(?<repo>.+)\z'
         if (-not $found) {
-            Write-Error "Error in parsing line $i of $($lines.count)" `
+            # Parse name part in line.
+            Write-Error `
+              "Error in parsing line $i of $($lines.count)" `
               -ErrorAction Stop
         }
         if (-not $found.Matches[0].Groups['name'].Success) {
-            Write-Error "Error in parsing name in line $i of $($lines.count)" `
+            Write-Error `
+              "Error in parsing name in line $i of $($lines.count)" `
               -ErrorAction Stop
         }
         $name = $found.Matches[0].Groups['name'].Value
         if ((Test-BucketName -bucketName $name) -eq $false) {
             Write-Error "Bucket name ""$name"" is illegal." -ErrorAction Stop
         }
+        # Parse repo URL part in line.
         if (-not $found.Matches[0].Groups['repo'].Success) {
-            Write-Error "Error in parsing repo in line $i of $($lines.count)" `
+            Write-Error `
+              "Error in parsing repo in line $i of $($lines.count)" `
               -ErrorAction Stop
         }
         $repoUrl = $found.Matches[0].Groups['repo'].Value
@@ -49,11 +56,24 @@ Repo in line $i of $($lines.count) is illegal.
 "@ `
               -ErrorAction Stop
         }
-        Write-SetupScoopLog `
-          "$thisFileName is adding custom bucket ""$name"" ..."
+        $parsed = @{
+            Name = $name
+            RepoURL = $repoUrl
+        }
+        $list += $parsed
+    }
+    if($list.Count -ne $lines.Count) {
+        Write-Error "$($list.Count) should be $($lines.Count)." `
+          -ErrorAction Stop
+    }
+    # Add buckets by constructed name and repoUrl pair array.
+    foreach($item in $list) {
+        Write-SetupScoopLog "Adding custom bucket ""$($item.Name)"" ..."
         Invoke-External `
           -Command "scoop" `
-          -Parameters @("bucket", "add", "$name", "$repoUrl") `
-          -ErrorMessage """scoop bucket add $name"" failed."
+          -Parameters @("bucket", "add", "$($item.Name)", "$($item.RepoURL)") `
+          -ErrorMessage """scoop bucket add $($item.Name)"" failed."
     }
+} else {
+    Write-Error "Missing parameter for ${thisFileName}." -ErrorAction Stop
 }

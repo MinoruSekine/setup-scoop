@@ -21,5 +21,7 @@ foreach($app in $apps) {
     if (-not (Test-AppName $app)) {
         Write-Error "Illegal app name `"$app`"." -ErrorAction Stop
     }
+}
+foreach($app in $apps) {
     Invoke-External -Command "scoop" -Parameters "install", "$app"
 }
