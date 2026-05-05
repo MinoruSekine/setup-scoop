@@ -16,11 +16,7 @@ if ($buckets.count -ge 1) {
         Write-Error "Failed to get known buckets by ""scoop bucket known""." `
           -ErrorAction Stop
     }
-    Set-Variable `
-      -Name "thisFileName" `
-      -Value (Split-Path -Leaf $PSCommandPath) `
-      -Option Constant `
-      -Scope Local
+    # Validate that given parameter(s) are in known bucket.
     foreach($bucket in $buckets) {
         if($null -eq ($known_buckets | Where-Object {$_ -eq $bucket})) {
             Write-Error (
@@ -28,6 +24,14 @@ if ($buckets.count -ge 1) {
                 "($($known_buckets -join ','))."
             ) -ErrorAction Stop
         }
+    }
+    # Add buckets.
+    Set-Variable `
+      -Name "thisFileName" `
+      -Value (Split-Path -Leaf $PSCommandPath) `
+      -Option Constant `
+      -Scope Local
+    foreach($bucket in $buckets) {
         Write-SetupScoopLog `
           "$thisFileName is adding known bucket ""${bucket}"" ..."
         Invoke-External -Command "scoop" -Parameters "bucket", "add", "$bucket"
