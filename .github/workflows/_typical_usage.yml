@@ -51,6 +51,27 @@ jobs:
             }
           }
 
+  force_install_scoop:
+    if: inputs.target == 'pr'
+
+    strategy:
+      matrix:
+        os: [windows-2025, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Run actions locally
+        uses: ./
+        with:
+          install_scoop: force
+
+      - name: Confirm scoop working
+        shell: pwsh
+        run: scoop bucket list
+
   # `buckets` parameter check
   add_extras_bucket_by_buckets_parameter:
     strategy:
