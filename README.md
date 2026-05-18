@@ -43,22 +43,27 @@
 
 ### `install_scoop`
 
-- If `true` (default), `scoop` will be installed when unavailable yet
-- If `force`, `scoop` will be installed even if available
-- If `false`, `scoop` will not be installed
-  - For example,
-    it is unnecessary to install scoop
-    because cached `~/scoop/` will be recovered
+| Value | Behavior | Use case |
+| --- | --- | --- |
+| `true` (default) | Install `scoop` only if unavailable. If already exists, safely skip installation. | Standard use. Also combine with `actions/cache`. |
+| `false` | Always skip `scoop` installation. | When always restore `~/scoop/`, or already installed `scoop`. |
+| `force` | Forcefully reinstall `scoop` even if already exists. | Troubleshooting or solution for cache corruption. |
 
 ### `run_as_admin`
 
-- If `true` (default), `scoop` will be installed with option `-RunAsAdmin`
-- If `false`, `scoop` will be installed without option `-RunAsAdmin`
-- Now both `true` or `false` will work on Windows Runners provided by GitHub,
-  because latest installer of scoop has workaround
-  for GitHub Actions and admin privilege
-  - The `false` value is still meaningful
-    for self-hosted Windows runner without administrator privilege
+> [!NOTE]
+> `run_as_admin` will be ignored when `install_scoop: false`.
+
+| Value | Behavior | Use case |
+| --- | --- | --- |
+| `true` (default) | Install `scoop` with option `-RunAsAdmin`. | Standard use on GitHub-hosted Windows runner. |
+| `false` | Install `scoop` without option `-RunAsAdmin`. | For self-hosted Windows runners without admin privilege. |
+
+> [!IMPORTANT]
+> For `run_as_admin`,
+> both `true` or `false` will work on GitHub-hosted Windows runners,
+> because the latest installer of `scoop` has a workaround
+> for GitHub Actions and admin privilege.
 
 ### `buckets`
 
@@ -70,13 +75,23 @@
 
 ### `custom_buckets`
 
-> [!IMPORTANT]
-> This is available in v5 or later.
-
 - Specify not-known-bucket(s) to add by URL
   - Custom buckets as "name repo_url" pairs, one per line
   - This parameter only supports URL-styled repo (e.g. https, ssh, git, ...)
 - This parameter is optional, no extra custom buckets will be added if omitted
+
+#### Example
+
+> [!NOTE]
+> `custom_buckets` parameter is available in `v5` or later.
+
+```YAML
+      uses: MinoruSekine/setup-scoop@v5
+        with:
+          custom_buckets: |
+            my-bucket https://github.com/UserName/bucket.git
+            mybucket2 https://github.com/UserName/bucket2.git
+```
 
 > [!WARNING]
 > If a repo URL contains authentication credentials
@@ -91,15 +106,6 @@
 > [Workflow commands for GitHub Actions](https://docs.github.com/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#masking-a-value-in-a-log)
 > for details.
 
-#### Example
-
-```YAML
-        with:
-          custom_buckets: |
-            my-bucket https://github.com/UserName/bucket.git
-            mybucket2 https://github.com/UserName/bucket2.git
-```
-
 ### `apps`
 
 - Specify application(s) to add
@@ -108,18 +114,24 @@
 
 ### `scoop_update`
 
-- If `true` (default), `scoop update` will be processed after installation
-- If `false`, it will not
+| Value | Behavior | Use case |
+| --- | --- | --- |
+| `true` (default) | Process `scoop update` before installing `apps`. | Standard use. |
+| `false` | Skip `scoop update`. | Reducing duration when skipping update is safe. |
 
 ### `scoop_checkup`
 
-- If `true`, `scoop checkup` will be processed after installation
-- If `false` (default), it will not
+| Value | Behavior | Use case |
+| --- | --- | --- |
+| `true` | Process `scoop checkup`. | Diagnostics for troubleshooting. |
+| `false` (default) | Skip `scoop checkup`. | Standard use. |
 
 ### `update_path`
 
-- If `true` (default), path to `scoop` will be added into environment variable `PATH`
-- If `false`, environment variable `PATH` will not be updated
+| Value | Behavior | Use case |
+| --- | --- | --- |
+| `true` (default) | Add default `scoop` path to environment variable `PATH`. | Standard use. |
+| `false` | Skip updating environment variable `PATH`. | When another step sets `PATH` or will not use `scoop`. |
 
 ## Advanced usage
 
