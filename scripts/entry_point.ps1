@@ -1,12 +1,15 @@
 Import-Module (Join-Path $($PSScriptRoot) "modules/Invoke-External")
 
-if($env:INSTALL_SCOOP -eq 'true') {
-    if($env:RUN_AS_ADMIN -eq 'true') {
-        Invoke-External -Command "$($PSScriptRoot)\install_scoop.ps1"`
-          -Parameters "-ForceAdmin"
-    } else {
-        Invoke-External -Command "$($PSScriptRoot)\install_scoop.ps1"
+if($env:INSTALL_SCOOP -eq 'true' -or $env:INSTALL_SCOOP -eq 'force') {
+    $params = @()
+    if($env:INSTALL_SCOOP -ne 'force') {
+        $params += "-SkipIfAvailable"
     }
+    if($env:RUN_AS_ADMIN -eq 'true') {
+        $params += "-ForceAdmin"
+    }
+    Invoke-External -Command "$($PSScriptRoot)\install_scoop.ps1" `
+      -Parameters $params
     Invoke-External -Command "scoop" -Parameters "--version"
 }
 if($env:UPDATE_PATH -eq 'true') {

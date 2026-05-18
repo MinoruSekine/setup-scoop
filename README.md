@@ -43,7 +43,8 @@
 
 ### `install_scoop`
 
-- If `true` (default), `scoop` will be installed
+- If `true` (default), `scoop` will be installed when unavailable yet
+- If `force`, `scoop` will be installed even if available
 - If `false`, `scoop` will not be installed
   - For example,
     it is unnecessary to install scoop

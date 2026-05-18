@@ -9,7 +9,7 @@ branding:
   color: 'blue'
 inputs:
   install_scoop:
-    description: 'Install scoop if true (default)'
+    description: 'Install scoop if true(default) when unavailable'
     required: true
     default: 'true'
   scoop_update:
