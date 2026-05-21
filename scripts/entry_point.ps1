@@ -1,5 +1,8 @@
 Import-Module (Join-Path $($PSScriptRoot) "modules/Invoke-External")
 
+# Fail fast by unsupported Action parameter(s).
+Invoke-External -Command "$($PSScriptRoot)\test_action_params.ps1"
+
 if($env:INSTALL_SCOOP -eq 'true' -or $env:INSTALL_SCOOP -eq 'force') {
     $params = @()
     if($env:INSTALL_SCOOP -ne 'force') {

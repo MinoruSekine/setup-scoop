@@ -29,6 +29,45 @@ jobs:
           -ErrorAction Stop
         shell: pwsh
 
+  # Fail fast by unsupported parameter.
+  failfast_by_unsupported_param:
+    needs: validate_inputs_target
+
+    strategy:
+      matrix:
+        os: [windows-2025, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - if: inputs.target == 'pr'
+        uses: actions/checkout@v6
+
+      - id: pr
+        if: inputs.target == 'pr'
+        name: Run actions locally
+        uses: ./
+        with:
+          scoop_checkup: force
+        continue-on-error: true
+
+      - id: dev
+        if: inputs.target == 'dev'
+        uses: MinoruSekine/setup-scoop@main
+        with:
+          scoop_checkup: force
+        continue-on-error: true
+
+      - if: >-
+          ${{
+            steps.pr.outcome == 'success' ||
+            steps.dev.outcome == 'success'
+          }}
+        run: >-
+          Write-Error "Unsupported value has been found in Action parameter."
+          -ErrorAction Stop
+        shell: pwsh
+
   # `apps` parameters tests.
   injection_attack_prevention:
     needs: validate_inputs_target
