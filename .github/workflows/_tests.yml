@@ -35,6 +35,8 @@ jobs:
     steps:
       - name: Check out default branch
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Install sccop and add extras bucket by running actions locally
         uses: ./
