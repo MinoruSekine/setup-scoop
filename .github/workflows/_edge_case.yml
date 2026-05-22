@@ -42,6 +42,8 @@ jobs:
     steps:
       - if: inputs.target == 'pr'
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - id: pr
         if: inputs.target == 'pr'
@@ -81,6 +83,8 @@ jobs:
     steps:
       - if: inputs.target == 'pr'
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - id: pr
         if: inputs.target == 'pr'
@@ -130,6 +134,8 @@ jobs:
     steps:
       - if: inputs.target == 'pr'
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - id: pr
         if: inputs.target == 'pr'
@@ -176,6 +182,8 @@ jobs:
     steps:
       - if: inputs.target == 'pr'
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - id: pr
         if: inputs.target == 'pr'
@@ -227,6 +235,8 @@ jobs:
     steps:
       - if: inputs.target == 'pr'
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - if: inputs.target == 'pr'
         name: Run actions locally
