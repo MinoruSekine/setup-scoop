@@ -38,7 +38,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Install sccop and add extras bucket by running actions locally
+      - name: Install scoop and add extras bucket by running actions locally
         uses: ./
         with:
           buckets: extras
