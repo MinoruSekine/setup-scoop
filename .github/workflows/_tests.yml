@@ -55,4 +55,9 @@ jobs:
         run: |
           # Explicitly import Pester 5.0.0 or later
           Import-Module Pester -MinimumVersion 5.0.0
-          Invoke-Pester -Path ./scripts/AppNameModule/
+          # Invoke Pester with config "exit on error".
+          $pesterConfig = New-PesterConfiguration
+          $pesterConfig.Run.Path = "./scripts/AppNameModule/"
+          $pesterConfig.Run.Exit = $true
+          $pesterConfig.Run.Throw = $true
+          Invoke-Pester -Configuration $pesterConfig
