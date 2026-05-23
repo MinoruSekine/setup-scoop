@@ -38,6 +38,7 @@ jobs:
         with:
           persist-credentials: false
 
+      # `scoop` is necessary in AppName validator tests.
       - name: Install scoop and add extras bucket by running actions locally
         uses: ./
         with:
