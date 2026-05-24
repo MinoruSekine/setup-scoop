@@ -99,3 +99,33 @@ Describe 'Test-BucketRepoUrl' {
         }
     }
 }
+
+Describe 'Test-BucketLocalPath' {
+    $modulePath = Join-Path $PSScriptRoot "Test-Params.psm1"
+    Import-Module $modulePath -Force
+
+
+    Context 'ValidLocalPath' {
+        It 'Bucket local path <localPath> should be valid' -ForEach @(
+            @{ localPath = './' }
+            @{ localPath = $PSScriptRoot }
+            @{ localPath = $PSScriptRoot -replace '\\', '/' }
+            @{ localPath = $PSScriptRoot | Resolve-Path }
+        ) {
+            Test-BucketLocalPath $localPath | Should -Be $true
+        }
+    }
+
+    Context 'InvalidLocalPath' {
+        It 'Bucket local path <localPath> should be invalid' -ForEach @(
+            @{ localPath = '-' }
+            @{ localPath = '--' }
+            @{ localPath = '-bar' }
+            @{ localPath = '--bar' }
+            @{ localPath = 'C:\does\not\exist' }
+            @{ localPath = 'https://github.com/MinoruSekine/setup-scoop.git' }
+        ) {
+            Test-BucketLocalPath $localPath | Should -Be $false
+        }
+    }
+}

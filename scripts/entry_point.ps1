@@ -28,6 +28,10 @@ if ($env:CUSTOM_BUCKETS) {
     Invoke-External -Command "$($PSScriptRoot)\add_custom_buckets.ps1" `
       -Parameters "$env:CUSTOM_BUCKETS"
 }
+if ($env:LOCAL_BUCKETS) {
+    Invoke-External -Command "$($PSScriptRoot)\add_local_buckets.ps1" `
+      -Parameters "$env:LOCAL_BUCKETS"
+}
 if($env:SCOOP_UPDATE -eq 'true') {
     Invoke-External -Command "scoop" -Parameters "update"
 }
