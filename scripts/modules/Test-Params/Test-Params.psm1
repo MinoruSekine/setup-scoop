@@ -65,8 +65,8 @@ Test given string is a legal bucket remote repo in scoop.
 
 Test given string is a legal bucket remote repo in scoop
 by regex.
-This function returns $false for local git repo.
-It will be supported by another way.
+This function returns $false for local git repo,
+that is supported by Test-BucketLocalPath.
 #>
 function Test-BucketRepoUrl {
     [CmdletBinding()]
@@ -82,5 +82,33 @@ function Test-BucketRepoUrl {
     )
 }
 
+<#
+.SYNOPSIS
+
+Test given string is a legal bucket local repo in scoop.
+
+.DESCRIPTION
+
+Test given string is a legal bucket local repo in scoop.
+This function returns $false for remote git repo,
+that is supported by Test-BucketRepoUrl.
+#>
+function Test-BucketLocalPath {
+    [CmdletBinding()]
+    [OutputType([bool])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$bucketLocalPath
+    )
+    return (
+        (-not $bucketLocalPath.StartsWith('-')) -and
+        ((Test-LocalAbsoluteWindowsPath $bucketLocalPath) -or
+         ($bucketLocalPath -notlike "*:*")) -and
+        (Test-Path -Path $bucketLocalPath -PathType Container) -and
+        ($null -ne (Resolve-Path -Path $bucketLocalPath -ErrorAction SilentlyContinue))
+    )
+}
+
 Export-ModuleMember `
-  -Function 'Test-AppName', 'Test-BucketName', 'Test-BucketRepoUrl'
+  -Function `
+  'Test-AppName', 'Test-BucketLocalPath', 'Test-BucketName', 'Test-BucketRepoUrl'

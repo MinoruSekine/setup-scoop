@@ -33,6 +33,10 @@ inputs:
     description: 'Add bucket(s) by one "name repo-url" pair per line'
     required: false
     default: ''
+  local_buckets:
+    description: 'Add bucket(s) by one "name local-path" pair per line'
+    required: false
+    default: ''
   run_as_admin:
     description: 'Install scoop with `-RunAsAdmin` or not'
     required: false
@@ -56,5 +60,6 @@ runs:
         UPDATE_PATH: ${{ inputs.update_path }}
         BUCKETS: ${{ inputs.buckets }}
         CUSTOM_BUCKETS: ${{ inputs.custom_buckets }}
+        LOCAL_BUCKETS: ${{ inputs.local_buckets }}
         RUN_AS_ADMIN: ${{ inputs.run_as_admin }}
         APPS: ${{ inputs.apps }}

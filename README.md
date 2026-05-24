@@ -78,9 +78,10 @@
 - Specify not-known-bucket(s) to add by URL
   - Custom buckets as "name repo_url" pairs, one per line
   - This parameter only supports URL-styled repo (e.g. https, ssh, git, ...)
+    - Use `local_buckets` for path-styled local buckets
 - This parameter is optional, no extra custom buckets will be added if omitted
 
-#### Example
+#### `custom_buckets` example
 
 > [!NOTE]
 > `custom_buckets` parameter is available in `v5` or later.
@@ -105,6 +106,40 @@
 > See
 > [Workflow commands for GitHub Actions](https://docs.github.com/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#masking-a-value-in-a-log)
 > for details.
+
+### `local_buckets`
+
+- Specify not-known-bucket(s) to add by local path
+  - Local buckets as "name path" pairs, one per line
+  - This parameter only supports path-styled repo
+    - Use `custom_buckets` for URL-styled remote buckets
+  - Path can be both absolute or relative path
+- This parameter is optional, no extra custom buckets will be added if omitted
+
+#### `local_buckets` example
+
+> [!NOTE]
+> `local_buckets` parameter is available in `v5` or later.
+
+```YAML
+      uses: actions/checkout@v6
+      with:
+        path: bucket1
+        persist-credentials: false
+        ref: main  # Detached head is not supported as `scoop` bucket.
+
+      uses: actions/checkout@v6
+      with:
+        path: bucket2
+        persist-credentials: false
+        ref: main  # Detached head is not supported as `scoop` bucket.
+
+      uses: MinoruSekine/setup-scoop@v5
+      with:
+        local_buckets: |
+          local-bucket .\bucket1
+          localbucket2 ${{ github.workspace }}/bucket2
+```
 
 ### `apps`
 
