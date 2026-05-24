@@ -87,10 +87,10 @@
 
 ```YAML
       uses: MinoruSekine/setup-scoop@v5
-        with:
-          custom_buckets: |
-            my-bucket https://github.com/UserName/bucket.git
-            mybucket2 https://github.com/UserName/bucket2.git
+      with:
+        custom_buckets: |
+          my-bucket https://github.com/UserName/bucket.git
+          mybucket2 https://github.com/UserName/bucket2.git
 ```
 
 > [!WARNING]
