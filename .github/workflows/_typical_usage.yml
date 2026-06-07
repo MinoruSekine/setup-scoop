@@ -197,11 +197,13 @@ jobs:
           }
 
   # `local_buckets` parameter check
-  add_local_buckets:
+  local_buckets:
     env:
       TEST_TARGET_LOCAL_BUCKETS: |
+        MinoruSekineLocal scoop-bucket-MinoruSekine
         local-bucket .\bucket1
         localbucket2 ${{ github.workspace }}/bucket2
+      TEST_TARGET_APPS: MinoruSekineLocal/win-toast-cli
 
     strategy:
       matrix:
@@ -216,7 +218,17 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Checkout repo as local bucket
+        if: inputs.target == 'pr' || inputs.target == 'dev'
+        uses: actions/checkout@v6
+        with:
+          path: scoop-bucket-MinoruSekine
+          persist-credentials: false
+          ref: master
+          repository: MinoruSekine/scoop-bucket-MinoruSekine
+
       - name: Checkout for local buckets dummy (1)
+        if: inputs.target == 'pr' || inputs.target == 'dev'
         uses: actions/checkout@v6
         with:
           path: bucket1
@@ -224,6 +236,7 @@ jobs:
           ref: main
 
       - name: Checkout for local buckets dummy (2)
+        if: inputs.target == 'pr' || inputs.target == 'dev'
         uses: actions/checkout@v6
         with:
           path: bucket2
@@ -235,21 +248,31 @@ jobs:
         uses: ./
         with:
           local_buckets: ${{ env.TEST_TARGET_LOCAL_BUCKETS }}
+          apps: ${{ env.TEST_TARGET_APPS }}
 
       - if: inputs.target == 'dev'
         uses: MinoruSekine/setup-scoop@main
         with:
           local_buckets: ${{ env.TEST_TARGET_LOCAL_BUCKETS }}
+          apps: ${{ env.TEST_TARGET_APPS }}
 
       - name: Validate expected buckets are available
         if: inputs.target == 'pr' || inputs.target == 'dev'
         shell: pwsh
         run: |
-          $buckets = @("local-bucket", "localbucket2")
+          $buckets = @("MinoruSekineLocal", "local-bucket", "localbucket2")
           foreach($bucket in $buckets) {
             if(-Not [bool](scoop bucket list | Select-String -Quiet $bucket)) {
               Write-Error "`"$bucket`" bucket not found." -ErrorAction Stop
             }
+          }
+
+      - name: Confirm win-toast-cli available
+        if: inputs.target == 'pr' || inputs.target == 'dev'
+        shell: pwsh
+        run: |
+          if(-not (Get-Command toast-cli -ErrorAction SilentlyContinue)) {
+            Write-Error "toast-cli is not found." -ErrorAction Stop
           }
 
   # Install apps check
