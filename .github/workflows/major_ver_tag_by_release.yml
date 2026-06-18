@@ -1,0 +1,42 @@
+name: Update major version tag by Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0  # Fetch all history for all branches and tags.
+          persist-credentials: true  # True to push tag.
+
+      # yamllint disable rule:line-length
+      - name: Get major version from semantic version of stable release.
+        id: get_major_ver
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          # Only strict semver tags (v<major>.<minor>.<patch>) are supported.
+          # Pre-release tags (e.g., v1.2.3-beta)
+          # or illegal numeric versioning (e.g., v01.2.3)
+          # are intentionally rejected.
+          MAJOR_VERSION=$(echo "$TAG" | sed -nE 's/^(v(0|[1-9][0-9]*))\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/\1/p')
+          if [[ -z "$MAJOR_VERSION" ]]; then
+            echo "::error::Invalid Semantic Versioning tag: $TAG"
+            exit 1
+          fi
+          echo "major-ver=${MAJOR_VERSION}" >> $GITHUB_OUTPUT
+      # yamllint enable rule:line-length
+
+      - name: Update major version tag.
+        run: |
+          git tag -f "${{ steps.get_major_ver.outputs.major-ver }}" \
+                  "${{ github.sha }}"
+          git push origin "${{ steps.get_major_ver.outputs.major-ver }}" -f
