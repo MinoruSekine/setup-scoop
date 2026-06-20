@@ -75,6 +75,9 @@
 
 ### `custom_buckets`
 
+> [!NOTE]
+> `custom_buckets` parameter is available in `v5` or later.
+
 - Specify not-known-bucket(s) to add by URL
   - Custom buckets as "name repo_url" pairs, one per line
   - This parameter only supports URL-styled repo (e.g. https, ssh, git, ...)
@@ -82,9 +85,6 @@
 - This parameter is optional, no extra custom buckets will be added if omitted
 
 #### `custom_buckets` example
-
-> [!NOTE]
-> `custom_buckets` parameter is available in `v5` or later.
 
 ```YAML
       uses: MinoruSekine/setup-scoop@v5
@@ -109,6 +109,9 @@
 
 ### `local_buckets`
 
+> [!NOTE]
+> `local_buckets` parameter is available in `v5` or later.
+
 - Specify not-known-bucket(s) to add by local path
   - Local buckets as "name path" pairs, one per line
   - This parameter only supports path-styled repo
@@ -117,9 +120,6 @@
 - This parameter is optional, no extra custom buckets will be added if omitted
 
 #### `local_buckets` example
-
-> [!NOTE]
-> `local_buckets` parameter is available in `v5` or later.
 
 ```YAML
       uses: actions/checkout@v6
