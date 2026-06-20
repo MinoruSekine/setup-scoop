@@ -35,7 +35,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-2025, windows-latest]
+        os: [windows-2025, windows-2022, windows-11-arm]
 
     runs-on: ${{ matrix.os }}
 
@@ -76,7 +76,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-2025, windows-latest]
+        os: [windows-2025, windows-2022, windows-11-arm]
 
     runs-on: ${{ matrix.os }}
 
@@ -127,7 +127,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-2025, windows-latest]
+        os: [windows-2025, windows-2022, windows-11-arm]
 
     runs-on: ${{ matrix.os }}
 
@@ -175,7 +175,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-2025, windows-latest]
+        os: [windows-2025, windows-2022, windows-11-arm]
 
     runs-on: ${{ matrix.os }}
 
@@ -228,7 +228,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-2025, windows-latest]
+        os: [windows-2025, windows-2022, windows-11-arm]
 
     runs-on: ${{ matrix.os }}
 

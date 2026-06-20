@@ -19,7 +19,7 @@ jobs:
   default:
     strategy:
       matrix:
-        os: [windows-2025, windows-latest]
+        os: [windows-2025, windows-2022, windows-11-arm]
 
     runs-on: ${{ matrix.os }}
 
@@ -58,7 +58,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-2025, windows-latest]
+        os: [windows-2025, windows-2022, windows-11-arm]
 
     runs-on: ${{ matrix.os }}
 
@@ -78,7 +78,7 @@ jobs:
   add_extras_bucket_by_buckets_parameter:
     strategy:
       matrix:
-        os: [windows-2025, windows-latest]
+        os: [windows-2025, windows-2022, windows-11-arm]
 
     runs-on: ${{ matrix.os }}
 
@@ -114,7 +114,7 @@ jobs:
   add_multiple_buckets_at_once:
     strategy:
       matrix:
-        os: [windows-2025, windows-latest]
+        os: [windows-2025, windows-2022, windows-11-arm]
 
     runs-on: ${{ matrix.os }}
 
@@ -162,7 +162,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-2025, windows-latest]
+        os: [windows-2025, windows-2022, windows-11-arm]
 
     runs-on: ${{ matrix.os }}
 
@@ -207,7 +207,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-2025, windows-latest]
+        os: [windows-2025, windows-2022, windows-11-arm]
 
     runs-on: ${{ matrix.os }}
 
@@ -282,7 +282,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-2025, windows-latest]
+        os: [windows-2025, windows-2022, windows-11-arm]
 
     runs-on: ${{ matrix.os }}
 
@@ -323,7 +323,7 @@ jobs:
   update_PATH_only:
     strategy:
       matrix:
-        os: [windows-2025, windows-latest]
+        os: [windows-2025, windows-2022, windows-11-arm]
 
     runs-on: ${{ matrix.os }}
 
