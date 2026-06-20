@@ -29,7 +29,8 @@
 ## Supported environments
 
 - `windows-2025`
-- `windows-latest`
+- `windows-2022`
+- `windows-11-arm`
 
 ## Parameters
 
