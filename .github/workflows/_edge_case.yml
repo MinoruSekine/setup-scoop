@@ -60,10 +60,18 @@ jobs:
           scoop_checkup: force
         continue-on-error: true
 
+      - id: release
+        if: inputs.target == 'release'
+        uses: MinoruSekine/setup-scoop@v5
+        with:
+          scoop_checkup: force
+        continue-on-error: true
+
       - if: >-
           ${{
             steps.pr.outcome == 'success' ||
-            steps.dev.outcome == 'success'
+            steps.dev.outcome == 'success' ||
+            steps.release.outcome == 'success'
           }}
         run: >-
           Write-Error "Unsupported value has been found in Action parameter."
@@ -104,7 +112,7 @@ jobs:
 
       - id: release
         if: inputs.target == 'release'
-        uses: MinoruSekine/setup-scoop@v4.0.2
+        uses: MinoruSekine/setup-scoop@v5
         with:
           buckets: extras
           apps: -foobar
@@ -154,7 +162,7 @@ jobs:
 
       - id: release
         if: inputs.target == 'release'
-        uses: MinoruSekine/setup-scoop@v4.0.2
+        uses: MinoruSekine/setup-scoop@v5
         with:
           buckets: java -add
         continue-on-error: true
@@ -203,7 +211,7 @@ jobs:
 
       - id: release
         if: inputs.target == 'release'
-        uses: MinoruSekine/setup-scoop@v4.0.2
+        uses: MinoruSekine/setup-scoop@v5
         with:
           buckets: unknown
         continue-on-error: true
@@ -250,7 +258,7 @@ jobs:
           run_as_admin: false
 
       - if: inputs.target == 'release'
-        uses: MinoruSekine/setup-scoop@v4.0.2
+        uses: MinoruSekine/setup-scoop@v5
         with:
           run_as_admin: false
 

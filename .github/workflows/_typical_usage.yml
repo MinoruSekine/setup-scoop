@@ -37,7 +37,7 @@ jobs:
         uses: MinoruSekine/setup-scoop@main
 
       - if: inputs.target == 'release'
-        uses: MinoruSekine/setup-scoop@v4.0.2
+        uses: MinoruSekine/setup-scoop@v5
 
       - name: Confirm scoop working
         shell: pwsh
@@ -54,8 +54,6 @@ jobs:
           }
 
   force_install_scoop:
-    if: inputs.target == 'pr'
-
     strategy:
       matrix:
         os: [windows-2025, windows-2022, windows-11-arm]
@@ -63,10 +61,26 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v6
+      - if: inputs.target == 'pr'
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
-      - name: Run actions locally
+      - if: inputs.target == 'pr'
+        name: Run actions locally
         uses: ./
+        with:
+          install_scoop: force
+
+      - if: inputs.target == 'dev'
+        name: Run actions locally
+        uses: MinoruSekine/setup-scoop@main
+        with:
+          install_scoop: force
+
+      - if: inputs.target == 'release'
+        name: Run actions locally
+        uses: MinoruSekine/setup-scoop@v5
         with:
           install_scoop: force
 
@@ -100,7 +114,7 @@ jobs:
           buckets: extras
 
       - if: inputs.target == 'release'
-        uses: MinoruSekine/setup-scoop@v4.0.2
+        uses: MinoruSekine/setup-scoop@v5
         with:
           buckets: extras
 
@@ -136,7 +150,7 @@ jobs:
           buckets: java games php
 
       - if: inputs.target == 'release'
-        uses: MinoruSekine/setup-scoop@v4.0.2
+        uses: MinoruSekine/setup-scoop@v5
         with:
           buckets: java games php
 
@@ -185,8 +199,13 @@ jobs:
           custom_buckets: ${{ env.TEST_TARGET_REPOS }}
           apps: ${{ env.TEST_TARGET_APPS }}
 
+      - if: inputs.target == 'release'
+        uses: MinoruSekine/setup-scoop@v5
+        with:
+          custom_buckets: ${{ env.TEST_TARGET_REPOS }}
+          apps: ${{ env.TEST_TARGET_APPS }}
+
       - name: Validate expected buckets are available
-        if: inputs.target == 'pr' || inputs.target == 'dev'
         shell: pwsh
         run: |
           $buckets = @("setup-scoop", "MinoruSekine")
@@ -219,7 +238,6 @@ jobs:
           persist-credentials: false
 
       - name: Checkout repo as local bucket
-        if: inputs.target == 'pr' || inputs.target == 'dev'
         uses: actions/checkout@v6
         with:
           path: scoop-bucket-MinoruSekine
@@ -228,7 +246,6 @@ jobs:
           repository: MinoruSekine/scoop-bucket-MinoruSekine
 
       - name: Checkout for local buckets dummy (1)
-        if: inputs.target == 'pr' || inputs.target == 'dev'
         uses: actions/checkout@v6
         with:
           path: bucket1
@@ -236,7 +253,6 @@ jobs:
           ref: main
 
       - name: Checkout for local buckets dummy (2)
-        if: inputs.target == 'pr' || inputs.target == 'dev'
         uses: actions/checkout@v6
         with:
           path: bucket2
@@ -256,8 +272,13 @@ jobs:
           local_buckets: ${{ env.TEST_TARGET_LOCAL_BUCKETS }}
           apps: ${{ env.TEST_TARGET_APPS }}
 
+      - if: inputs.target == 'release'
+        uses: MinoruSekine/setup-scoop@v5
+        with:
+          local_buckets: ${{ env.TEST_TARGET_LOCAL_BUCKETS }}
+          apps: ${{ env.TEST_TARGET_APPS }}
+
       - name: Validate expected buckets are available
-        if: inputs.target == 'pr' || inputs.target == 'dev'
         shell: pwsh
         run: |
           $buckets = @("MinoruSekineLocal", "local-bucket", "localbucket2")
@@ -268,7 +289,6 @@ jobs:
           }
 
       - name: Confirm win-toast-cli available
-        if: inputs.target == 'pr' || inputs.target == 'dev'
         shell: pwsh
         run: |
           if(-not (Get-Command toast-cli -ErrorAction SilentlyContinue)) {
@@ -306,7 +326,7 @@ jobs:
           apps: ${{ env.TEST_TARGET_APPS }}
 
       - if: inputs.target == 'release'
-        uses: MinoruSekine/setup-scoop@v4.0.2
+        uses: MinoruSekine/setup-scoop@v5
         with:
           buckets: extras
           apps: ${{ env.TEST_TARGET_APPS }}
@@ -351,7 +371,7 @@ jobs:
           update_path: 'true'
 
       - if: inputs.target == 'release'
-        uses: MinoruSekine/setup-scoop@v4.0.2
+        uses: MinoruSekine/setup-scoop@v5
         with:
           install_scoop: 'false'
           scoop_update: 'false'
