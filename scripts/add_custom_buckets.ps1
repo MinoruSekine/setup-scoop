@@ -1,4 +1,4 @@
-param([string]$custom_buckets_string)
+param([string]$CustomBucketsString)
 
 Import-Module (Join-Path $($PSScriptRoot) "modules/Invoke-External")
 Import-Module (Join-Path $($PSScriptRoot) "modules/Test-Params")
@@ -11,14 +11,14 @@ Set-Variable `
   -Scope Script
 
 [string[]] $lines = @()
-if ($custom_buckets_string) {
+if ($CustomBucketsString) {
     $lines = (
-        $custom_buckets_string -split '\r?\n'
+        $CustomBucketsString -split '\r?\n'
         | ForEach-Object { $_.Trim() }
         | Where-Object { $_ -ne "" }
     )
 }
-# $custom_buckets_string, $lines, $line, $repoUrl, $list, and $list.RepoURL
+# $CustomBucketsString, $lines, $line, $repoUrl, $list, and $list.RepoURL
 # shouldn't be output to log,
 # because they can be include HTTPS PAT or some secrets.
 if ($lines.count -ge 1) {

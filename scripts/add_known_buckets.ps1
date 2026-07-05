@@ -1,27 +1,27 @@
-param([string]$buckets_string)
+param([string]$BucketsString)
 
 Import-Module (Join-Path $($PSScriptRoot) "modules/Invoke-External")
 Import-Module (Join-Path $($PSScriptRoot) "modules/Write-SetupScoopLog")
 
 [string[]] $buckets = @()
-if ($buckets_string) {
-    $buckets = $buckets_string.Split(" ")
+if ($BucketsString) {
+    $buckets = $BucketsString.Split(" ")
 }
 if ($buckets.count -ge 1) {
     # Next line needs outputs through PowerShell pipeline,
     # so Invoke-External will not be suitable for here.
     # Note: SETUP_SCOOP_DRYRUN will not be effected here.
-    $known_buckets=& scoop bucket known
+    $knownBuckets=& scoop bucket known
     if (-not $?) {
         Write-Error "Failed to get known buckets by ""scoop bucket known""." `
           -ErrorAction Stop
     }
     # Validate that given parameter(s) are in known bucket.
     foreach($bucket in $buckets) {
-        if($null -eq ($known_buckets | Where-Object {$_ -eq $bucket})) {
+        if($null -eq ($knownBuckets | Where-Object {$_ -eq $bucket})) {
             Write-Error (
                 "Bucket `"$bucket`" is not in known buckets " +
-                "($($known_buckets -join ','))."
+                "($($knownBuckets -join ','))."
             ) -ErrorAction Stop
         }
     }

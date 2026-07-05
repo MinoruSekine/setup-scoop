@@ -1,6 +1,6 @@
 param(
     [Parameter()]
-    [string]$apps_string = $(throw "apps parameter is necessary.")
+    [string]$AppsString = $(throw "apps parameter is necessary.")
 )
 
 Import-Module (Join-Path $($PSScriptRoot) "modules/Invoke-External")
@@ -8,8 +8,8 @@ Import-Module (Join-Path $($PSScriptRoot) "modules/Test-Params")
 Import-Module (Join-Path $($PSScriptRoot) "modules/Write-SetupScoopLog")
 
 [string[]] $apps = @()
-if ($apps_string) {
-    $apps = $apps_string.Split(" ")
+if ($AppsString) {
+    $apps = $AppsString.Split(" ")
 }
 Set-Variable `
   -Name "thisFileName" `
