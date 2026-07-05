@@ -24,6 +24,7 @@ jobs:
           path: .\scripts\
           recurse: true
           output: psscriptanalyzer.sarif
+          settings: .\scripts\PSScriptAnalyzerSettings.psd1
 
       - uses: astral-sh/setup-uv@v7.2.0
 
