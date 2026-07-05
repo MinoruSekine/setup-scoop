@@ -1,4 +1,4 @@
-param([string]$local_buckets_string)
+param([string]$LocalBucketsString)
 
 Import-Module (Join-Path $($PSScriptRoot) "modules/Invoke-External")
 Import-Module (Join-Path $($PSScriptRoot) "modules/Test-Params")
@@ -11,9 +11,9 @@ Set-Variable `
   -Scope Script
 
 [string[]] $lines = @()
-if ($local_buckets_string) {
+if ($LocalBucketsString) {
     $lines = (
-        $local_buckets_string -split '\r?\n'
+        $LocalBucketsString -split '\r?\n'
         | ForEach-Object { $_.Trim() }
         | Where-Object { $_ -ne "" }
     )

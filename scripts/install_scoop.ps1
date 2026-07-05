@@ -9,9 +9,9 @@ if ($SkipIfAvailable -and (Get-Command "scoop")) {
     Write-SetupScoopLog "`scoop` is found. Skip installation."
     exit 0
 }
-$install_script = [scriptblock]::Create((Invoke-RestMethod -Uri https://get.scoop.sh))
+$installScript = [scriptblock]::Create((Invoke-RestMethod -Uri https://get.scoop.sh))
 if ($ForceAdmin) {
-    & $install_script -RunAsAdmin
+    & $installScript -RunAsAdmin
 } else {
-    & $install_script
+    & $installScript
 }

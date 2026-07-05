@@ -1,19 +1,19 @@
 function Test-ActionParam {
     param (
-        [hashtable]$actionParam
+        [hashtable]$ActionParam
     )
 
     # It is capable that specific env is undefined.
-    if ([string]::IsNullOrEmpty($actionParam.value)) {
+    if ([string]::IsNullOrEmpty($ActionParam.value)) {
         return
     }
 
-    if ($actionParam.value -notin $actionParam.allowed) {
-        # $actionParam.value should not be in error log,
+    if ($ActionParam.value -notin $ActionParam.allowed) {
+        # $ActionParam.value should not be in error log,
         # because action users can store secrets into them.
         Write-Error @"
-Unsupported parameter in $($actionParam.name).
-Supported value is one of $($actionParam.allowed -join ", ").
+Unsupported parameter in $($ActionParam.name).
+Supported value is one of $($ActionParam.allowed -join ", ").
 "@ `
           -ErrorAction Stop
     }
