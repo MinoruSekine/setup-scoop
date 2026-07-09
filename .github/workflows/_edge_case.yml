@@ -34,6 +34,7 @@ jobs:
     needs: validate_inputs_target
 
     strategy:
+      max-parallel: 1
       matrix:
         os: [windows-2025, windows-2022, windows-11-arm]
 
@@ -75,6 +76,7 @@ jobs:
     needs: validate_inputs_target
 
     strategy:
+      max-parallel: 1
       matrix:
         os: [windows-2025, windows-2022, windows-11-arm]
 
@@ -126,6 +128,7 @@ jobs:
     needs: validate_inputs_target
 
     strategy:
+      max-parallel: 1
       matrix:
         os: [windows-2025, windows-2022, windows-11-arm]
 
@@ -174,6 +177,7 @@ jobs:
     needs: validate_inputs_target
 
     strategy:
+      max-parallel: 1
       matrix:
         os: [windows-2025, windows-2022, windows-11-arm]
 
@@ -227,6 +231,7 @@ jobs:
     needs: validate_inputs_target
 
     strategy:
+      max-parallel: 1
       matrix:
         os: [windows-2025, windows-2022, windows-11-arm]
 

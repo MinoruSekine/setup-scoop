@@ -18,6 +18,7 @@ jobs:
   # Typical usage
   default:
     strategy:
+      max-parallel: 1
       matrix:
         os: [windows-2025, windows-2022, windows-11-arm]
 
@@ -57,6 +58,7 @@ jobs:
     if: inputs.target == 'pr'
 
     strategy:
+      max-parallel: 1
       matrix:
         os: [windows-2025, windows-2022, windows-11-arm]
 
@@ -77,6 +79,7 @@ jobs:
   # `buckets` parameter check
   add_extras_bucket_by_buckets_parameter:
     strategy:
+      max-parallel: 1
       matrix:
         os: [windows-2025, windows-2022, windows-11-arm]
 
@@ -113,6 +116,7 @@ jobs:
 
   add_multiple_buckets_at_once:
     strategy:
+      max-parallel: 1
       matrix:
         os: [windows-2025, windows-2022, windows-11-arm]
 
@@ -161,6 +165,7 @@ jobs:
       # yamllint enable rule:line-length
 
     strategy:
+      max-parallel: 1
       matrix:
         os: [windows-2025, windows-2022, windows-11-arm]
 
@@ -206,6 +211,7 @@ jobs:
       TEST_TARGET_APPS: MinoruSekineLocal/win-toast-cli
 
     strategy:
+      max-parallel: 1
       matrix:
         os: [windows-2025, windows-2022, windows-11-arm]
 
@@ -281,6 +287,7 @@ jobs:
       TEST_TARGET_APPS: "fclones jq xh"
 
     strategy:
+      max-parallel: 1
       matrix:
         os: [windows-2025, windows-2022, windows-11-arm]
 
@@ -322,6 +329,7 @@ jobs:
   # `update_path` without installing scoop, any buckets, and any apps
   update_PATH_only:
     strategy:
+      max-parallel: 1
       matrix:
         os: [windows-2025, windows-2022, windows-11-arm]
 
