@@ -275,3 +275,28 @@ jobs:
             Write-Error "scoop was not installed when run_as_admin=false." `
             -ErrorAction Stop
           }
+
+  non_windows:
+    needs: validate_inputs_target
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - if: inputs.target == 'pr'
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - if: inputs.target == 'pr'
+        name: Run actions locally
+        uses: ./
+
+      - if: inputs.target == 'dev'
+        uses: MinoruSekine/setup-scoop@main
+
+      - if: inputs.target == 'release'
+        uses: MinoruSekine/setup-scoop@v5
