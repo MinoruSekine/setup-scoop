@@ -275,3 +275,103 @@ jobs:
             Write-Error "scoop was not installed when run_as_admin=false." `
             -ErrorAction Stop
           }
+
+  scoop_install_failure:
+    needs: validate_inputs_target
+
+    runs-on: windows-latest
+
+    steps:
+      - name: Disrupt scoop installation by existing file
+        shell: pwsh
+        run: |
+          $targetDir = Join-Path $env:RUNNER_TEMP "ScoopBlockTarget"
+          "SCOOP=$targetDir" >> $env:GITHUB_ENV
+          New-Item -Path $targetDir -ItemType File -Force
+
+      - if: inputs.target == 'pr'
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - id: pr
+        if: inputs.target == 'pr'
+        name: Run actions locally
+        uses: ./
+        with:
+          install_scoop: force
+        continue-on-error: true
+
+      - id: dev
+        if: inputs.target == 'dev'
+        uses: MinoruSekine/setup-scoop@main
+        with:
+          install_scoop: force
+        continue-on-error: true
+
+      - id: release
+        if: inputs.target == 'release'
+        uses: MinoruSekine/setup-scoop@v5
+        with:
+          install_scoop: force
+        continue-on-error: true
+
+      - if: >-
+          ${{
+            steps.pr.outcome == 'success' ||
+            steps.dev.outcome == 'success' ||
+            steps.release.outcome == 'success'
+          }}
+        run: >-
+          Write-Error "${{ github.job }} should cause error, but not."
+          -ErrorAction Stop
+        shell: pwsh
+
+  unsupported_runner:
+    needs: validate_inputs_target
+
+    strategy:
+      max-parallel: 1
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - if: inputs.target == 'pr'
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - id: pr
+        if: inputs.target == 'pr'
+        name: Run actions locally
+        uses: ./
+        with:
+          install_scoop: force
+        continue-on-error: true
+
+      - id: dev
+        if: inputs.target == 'dev'
+        uses: MinoruSekine/setup-scoop@main
+        with:
+          install_scoop: force
+        continue-on-error: true
+
+      - id: release
+        if: inputs.target == 'release'
+        uses: MinoruSekine/setup-scoop@v5
+        with:
+          install_scoop: force
+        continue-on-error: true
+
+      - if: >-
+          ${{
+            steps.pr.outcome == 'success' ||
+            steps.dev.outcome == 'success' ||
+            steps.release.outcome == 'success'
+          }}
+        run: >-
+          Write-Error "${{ github.job }}_${{ matrix.os }} unexpectedly success."
+          -ErrorAction Stop
+        shell: pwsh
