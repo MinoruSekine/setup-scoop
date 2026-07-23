@@ -17,6 +17,9 @@ if ($SkipIfAvailable -and (Get-Command "scoop")) {
 # That makes difficult to trap errors.
 $installerPath = Join-Path $env:RUNNER_TEMP "install-scoop.ps1"
 Invoke-RestMethod -Uri https://get.scoop.sh -OutFile $installerPath
+if (-not $?) {
+    Write-Error "Failed to download 'scoop' install script." -ErrorAction Stop
+}
 
 if ($ForceAdmin) {
     Invoke-External $installerPath "-RunAsAdmin"
