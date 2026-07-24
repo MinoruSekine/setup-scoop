@@ -309,13 +309,6 @@ jobs:
           install_scoop: force
         continue-on-error: true
 
-      - id: release
-        if: inputs.target == 'release'
-        uses: MinoruSekine/setup-scoop@v5
-        with:
-          install_scoop: force
-        continue-on-error: true
-
       - if: >-
           ${{
             steps.pr.outcome == 'success' ||
@@ -354,13 +347,6 @@ jobs:
       - id: dev
         if: inputs.target == 'dev'
         uses: MinoruSekine/setup-scoop@main
-        with:
-          install_scoop: force
-        continue-on-error: true
-
-      - id: release
-        if: inputs.target == 'release'
-        uses: MinoruSekine/setup-scoop@v5
         with:
           install_scoop: force
         continue-on-error: true
