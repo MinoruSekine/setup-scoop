@@ -22,5 +22,7 @@ jobs:
           persist-credentials: false
 
       - name: Detect unmerged commit(s)
-        run: sh .github/workflows/scripts/detect_unmerged.sh main releng/v5
+        run: |
+          sh .github/workflows/scripts/detect_unmerged.sh \
+            origin/main origin/releng/v5
         shell: bash

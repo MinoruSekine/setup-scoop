@@ -8,12 +8,14 @@
 
 ## Status
 
+<!-- markdownlint-disable no-inline-html -->
 | Type | ref | Status |
 | --- | --- | --- |
 | Latest release | `v5.0.0` | ![v5.0.0 status of typical usage](https://github.com/MinoruSekine/setup-scoop/actions/workflows/typical_usage_release.yml/badge.svg) ![v5.0.0 status of edge case](https://github.com/MinoruSekine/setup-scoop/actions/workflows/edge_case_release.yml/badge.svg) |
-| Development branch | `main` | ![main status of typical usage](https://github.com/MinoruSekine/setup-scoop/actions/workflows/typical_usage_dev.yml/badge.svg?branch=main) ![main status of edge case](https://github.com/MinoruSekine/setup-scoop/actions/workflows/edge_case_dev.yml/badge.svg?branch=main) ![main status of lint](https://github.com/MinoruSekine/setup-scoop/actions/workflows/lint.yml/badge.svg?branch=main) |
+| Development branch | `main` | ![main status of typical usage](https://github.com/MinoruSekine/setup-scoop/actions/workflows/typical_usage_dev.yml/badge.svg?branch=main) ![main status of edge case](https://github.com/MinoruSekine/setup-scoop/actions/workflows/edge_case_dev.yml/badge.svg?branch=main)<br>![main status of lint](https://github.com/MinoruSekine/setup-scoop/actions/workflows/lint.yml/badge.svg?branch=main)<br>![release commits unmerged to main](https://github.com/MinoruSekine/setup-scoop/actions/workflows/detect_unmerged.yml/badge.svg) |
 
 [![Sponsors](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/MinoruSekine)
+<!-- markdownlint-enable no-inline-html -->
 
 ## Sample usage
 
