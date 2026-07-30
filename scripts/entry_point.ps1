@@ -1,5 +1,8 @@
 Import-Module (Join-Path $($PSScriptRoot) "modules/Invoke-External")
 
+# Fail fast by unsupported runner.
+Invoke-External -Command "$($PSScriptRoot)\test_runner_os.ps1"
+
 # Fail fast by unsupported Action parameter(s).
 Invoke-External -Command "$($PSScriptRoot)\test_action_params.ps1"
 
