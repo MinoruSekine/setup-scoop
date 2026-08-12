@@ -1,0 +1,70 @@
+name: Create draft release by workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      major_ver:
+        required: true
+        type: number
+      minor_ver:
+        required: true
+        type: number
+      patch_ver:
+        required: true
+        type: number
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    env:
+# yamllint disable rule:line-length
+      ARCHIVE_FILE: ${{ github.event.repository.name }}-v${{ inputs.major_ver }}.${{ inputs.minor_ver }}.${{ inputs.patch_ver }}.zip
+      RELEASE_BRANCH: releng/v${{ inputs.major_ver }}
+      SEMANTIC_VERSIONING: v${{ inputs.major_ver }}.${{ inputs.minor_ver }}.${{ inputs.patch_ver }}
+# yamllint enable rule:line-length
+
+    runs-on: ubuntu-latest
+
+    steps:
+# yamllint disable rule:line-length
+      - name: Test inputs are semantic versioning.
+        shell: bash
+        run: |
+          if echo "$SEMANTIC_VERSIONING" | grep -qE '^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$'; then
+            echo "$SEMANTIC_VERSIONING is semantic versioning."
+            exit 0
+          else
+            echo "$SEMANTIC_VERSIONING is not semantic versioning." >&2
+            exit 1
+          fi
+# yamllint enable rule:line-length
+
+      - uses: actions/checkout@v6
+        with:
+          ref: releng/v${{ inputs.major_ver }}
+          persist-credentials: false
+
+      - name: Store release target SHA.
+        shell: bash
+        run: |
+          echo "RELEASE_TARGET=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Create archive to attach into draft release.
+        shell: bash
+        run: |
+          git archive --format=zip \
+          -o "$ARCHIVE_FILE" \
+          "$RELEASE_TARGET"
+
+      - name: Create draft release with attached archive.
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$SEMANTIC_VERSIONING" \
+          --draft \
+          --target "$RELEASE_TARGET" \
+          --title "$SEMANTIC_VERSIONING" \
+          --generate-notes \
+          "$ARCHIVE_FILE"
