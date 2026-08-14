@@ -91,7 +91,7 @@ jobs:
         run: scoop bucket list
 
   # `buckets` parameter check
-  add_extras_bucket_by_buckets_parameter:
+  add_buckets:
     strategy:
       max-parallel: 1
       matrix:
@@ -128,34 +128,23 @@ jobs:
             Write-Error "extras bucket not found." -ErrorAction Stop
           }
 
-  add_multiple_buckets_at_once:
-    strategy:
-      max-parallel: 1
-      matrix:
-        os: [windows-2025, windows-2022, windows-11-arm]
-
-    runs-on: ${{ matrix.os }}
-
-    steps:
-      - if: inputs.target == 'pr'
-        uses: actions/checkout@v6
-        with:
-          persist-credentials: false
-
       - if: inputs.target == 'pr'
         name: Run actions locally
         uses: ./
         with:
+          install_scoop: false
           buckets: java games php
 
       - if: inputs.target == 'dev'
         uses: MinoruSekine/setup-scoop@main
         with:
+          install_scoop: false
           buckets: java games php
 
       - if: inputs.target == 'release'
         uses: MinoruSekine/setup-scoop@v5
         with:
+          install_scoop: false
           buckets: java games php
 
       - name: Validate expected buckets are available
