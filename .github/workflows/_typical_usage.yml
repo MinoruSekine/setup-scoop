@@ -40,10 +40,6 @@ jobs:
       - if: inputs.target == 'release'
         uses: MinoruSekine/setup-scoop@v5
 
-      - name: Confirm scoop working
-        shell: pwsh
-        run: scoop bucket list
-
       - name: Validate no additional buckets are available as default
         shell: pwsh
         run: |
