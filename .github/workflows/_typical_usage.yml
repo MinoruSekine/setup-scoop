@@ -236,19 +236,16 @@ jobs:
           ref: master
           repository: MinoruSekine/scoop-bucket-MinoruSekine
 
-      - name: Checkout for local buckets dummy (1)
+      - name: Checkout for local buckets dummy
         uses: actions/checkout@v6
         with:
           path: bucket1
           persist-credentials: false
           ref: main
 
-      - name: Checkout for local buckets dummy (2)
-        uses: actions/checkout@v6
-        with:
-          path: bucket2
-          persist-credentials: false
-          ref: main
+      - name: Create copy of local buckets dummy
+        shell: pwsh
+        run: Copy-Item -Recurse bucket1 bucket2
 
       - if: inputs.target == 'pr'
         name: Run actions locally
