@@ -17,6 +17,8 @@ on:
 jobs:
   validate_inputs_target:
     runs-on: windows-latest
+    env:
+      TARGET: ${{ inputs.target }}
     steps:
       - if: >-
           ${{
@@ -25,8 +27,7 @@ jobs:
             inputs.target != 'release'
           }}
         run: >-
-          Write-Error "Unsupported target ${{ inputs.target }}"
-          -ErrorAction Stop
+          Write-Error "Unsupported target '$env:TARGET'" -ErrorAction Stop
         shell: pwsh
 
   # Fail fast by unsupported parameter.
