@@ -15,8 +15,25 @@ on:
         type: string
 
 jobs:
+  validate_inputs_target:
+    runs-on: windows-latest
+    env:
+      TARGET: ${{ inputs.target }}
+    steps:
+      - if: >-
+          ${{
+            inputs.target != 'pr' &&
+            inputs.target != 'dev' &&
+            inputs.target != 'release'
+          }}
+        run: >-
+          Write-Error "Unsupported target '$env:TARGET'" -ErrorAction Stop
+        shell: pwsh
+
   # Typical usage
   default:
+    needs: validate_inputs_target
+
     strategy:
       max-parallel: 1
       matrix:
@@ -51,6 +68,8 @@ jobs:
           }
 
   force_install_scoop:
+    needs: validate_inputs_target
+
     strategy:
       max-parallel: 1
       matrix:
@@ -88,6 +107,8 @@ jobs:
 
   # `buckets` parameter check
   add_buckets:
+    needs: validate_inputs_target
+
     strategy:
       max-parallel: 1
       matrix:
@@ -155,6 +176,8 @@ jobs:
 
   # `custom_buckets` parameter check
   add_multiple_custom_buckets:
+    needs: validate_inputs_target
+
     env:
       TEST_TARGET_APPS: win-toast-cli
       # yamllint disable rule:line-length
@@ -207,6 +230,8 @@ jobs:
 
   # `local_buckets` parameter check
   local_buckets:
+    needs: validate_inputs_target
+
     env:
       TEST_TARGET_LOCAL_BUCKETS: |
         MinoruSekineLocal scoop-bucket-MinoruSekine
@@ -285,6 +310,8 @@ jobs:
 
   # Install apps check
   install_apps:
+    needs: validate_inputs_target
+
     env:
       TEST_TARGET_APPS: "fclones jq xh"
 
@@ -330,6 +357,8 @@ jobs:
 
   # `update_path` without installing scoop, any buckets, and any apps
   update_PATH_only:
+    needs: validate_inputs_target
+
     strategy:
       max-parallel: 1
       matrix:
