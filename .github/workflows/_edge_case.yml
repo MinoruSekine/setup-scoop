@@ -5,6 +5,21 @@ name: Edge case workflow common parts (reusable workflow)
 on:
   workflow_call:
     inputs:
+      os_list_0:
+        description: |
+          Override this to adjust performance and coverage.
+        type: string
+        default: '["windows-2025", "windows-2022", "windows-11-arm"]'
+      os_list_1:
+        description: |
+          Override this to adjust performance and coverage.
+        type: string
+        default: '["windows-2025", "windows-2022", "windows-11-arm"]'
+      os_list_2:
+        description: |
+          Override this to adjust performance and coverage.
+        type: string
+        default: '["windows-2025", "windows-2022", "windows-11-arm"]'
       target:
         description: |
           Workflow target.
@@ -36,7 +51,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-2025, windows-2022, windows-11-arm]
+        os: ${{ fromJson(inputs.os_list_0) }}
 
     runs-on: ${{ matrix.os }}
 
@@ -86,7 +101,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        os: [windows-2025, windows-2022, windows-11-arm]
+        os: ${{ fromJson(inputs.os_list_1) }}
 
     runs-on: ${{ matrix.os }}
 
@@ -138,7 +153,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        os: [windows-2025, windows-2022, windows-11-arm]
+        os: ${{ fromJson(inputs.os_list_2) }}
 
     runs-on: ${{ matrix.os }}
 
@@ -187,7 +202,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        os: [windows-2025, windows-2022, windows-11-arm]
+        os: ${{ fromJson(inputs.os_list_0) }}
 
     runs-on: ${{ matrix.os }}
 
@@ -241,7 +256,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        os: [windows-2025, windows-2022, windows-11-arm]
+        os: ${{ fromJson(inputs.os_list_1) }}
 
     runs-on: ${{ matrix.os }}
 

@@ -10,3 +10,6 @@ jobs:
     uses: ./.github/workflows/_edge_case.yml
     with:
       target: 'pr'
+      os_list_0: '["windows-2025"]'
+      os_list_1: '["windows-2022"]'
+      os_list_2: '["windows-11-arm"]'
