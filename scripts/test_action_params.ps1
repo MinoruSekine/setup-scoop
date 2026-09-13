@@ -1,3 +1,5 @@
+Import-Module (Join-Path $($PSScriptRoot) "modules/Test-Params")
+
 function Test-ActionParam {
     param (
         [hashtable]$ActionParam
@@ -47,9 +49,19 @@ $actionParams = @(
         value = $env:SCOOP_CHECKUP;
         name = 'SCOOP_CHECKUP';
         allowed = @('true', 'false')
+    };
+    @{
+        value = $env:CACHE;
+        name = 'CACHE';
+        allowed = @('true', 'false')
     }
 )
 
 foreach ($i in $actionParams) {
     Test-ActionParam -ActionParam $i
+}
+
+if ($env:CACHE_VERSION -and (-not (Test-CacheVersion $env:CACHE_VERSION))) {
+    Write-Error "`cache_version` can't include `_` by constraints." `
+      -ErrorAction Stop
 }

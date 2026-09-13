@@ -109,6 +109,29 @@ function Test-BucketLocalPath {
     )
 }
 
+<#
+.SYNOPSIS
+
+Test given string is a valid cache version for setup-scoop.
+
+.DESCRIPTION
+
+`cache_version` rejects the string including `_` (underscore)
+by contraints of setup-scoop implementations.
+This function can recognize given str meet it or not.
+#>
+function Test-CacheVersion {
+    [CmdletBinding()]
+    [OutputType([bool])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$cacheVersion
+    )
+    return ($cacheVersion -notmatch '_')
+}
+
 Export-ModuleMember `
   -Function `
-  'Test-AppName', 'Test-BucketLocalPath', 'Test-BucketName', 'Test-BucketRepoUrl'
+  'Test-AppName', `
+  'Test-BucketLocalPath', 'Test-BucketName', 'Test-BucketRepoUrl', `
+  'Test-CacheVersion'

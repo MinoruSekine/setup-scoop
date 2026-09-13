@@ -50,7 +50,7 @@
 | Value | Behavior | Use case |
 | --- | --- | --- |
 | `true` (default) | Install `scoop` only if unavailable. If already exists, safely skip installation. | Standard use. Also combine with `actions/cache`. |
-| `false` | Always skip `scoop` installation. | When always restore `~/scoop/`, or already installed `scoop`. |
+| `false` | Always skip `scoop` installation. | Already installed `scoop`, or Scoop directory is restored by another step or job. |
 | `force` | Forcefully reinstall `scoop` even if already exists. | Troubleshooting or solution for cache corruption. |
 
 ### `run_as_admin`
@@ -102,14 +102,23 @@
 > If a repo URL contains authentication credentials
 > (e.g.,
 > `https://${{ secrets.MY_PAT }}@github.com/user/private-repo.git`),
-> always use `${{ secrets.* }}` to reference the token so it is automatically
-> masked in workflow logs. Never hardcode a PAT directly in the workflow YAML.
+> please be careful of 2 items.
 >
-> If you must hide repo URL completely in your workflow log,
-> please use `::add-mask` in your workflow.
-> See
-> [Workflow commands for GitHub Actions](https://docs.github.com/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#masking-a-value-in-a-log)
-> for details.
+> 1. Always use `${{ secrets.* }}` to reference the token so it is automatically
+>    masked in workflow logs. Never hardcode a PAT directly in the workflow YAML.
+>    If you must hide repo URL completely in your workflow log,
+>    please use `::add-mask` in your workflow.
+>    See
+>    [Workflow commands for GitHub Actions](https://docs.github.com/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#masking-a-value-in-a-log)
+>    for details.
+> 2. If also `cache: true`, credentials will be included in cache.
+>    This can be security issue
+>
+>    - With `cache: true`, the cache can contain Scoop bucket Git metadata
+>    - Do not include credentials, tokens, or passwords in custom_buckets URLs,
+>      if unnecessary
+>    - Treat a cache as sensitive if a bucket URL includes credentials
+>    - Use a credential-free repository URL when possible
 
 ### `local_buckets`
 
@@ -172,59 +181,58 @@
 | `true` (default) | Add default `scoop` path to environment variable `PATH`. | Standard use. |
 | `false` | Skip updating environment variable `PATH`. | When another step sets `PATH` or will not use `scoop`. |
 
-## Advanced usage
+### Cache parameters
 
-### Sample to improve workflow performance with `actions/cache`
+> [!NOTE]
+> `cache` and related parameters are available in `v6` or later.
 
-- If cache is available, `install_scoop` will be `false`
-  to skip installation and only `update_path` will be `true`
-- Include `packages_to_install` into cache seed
-  to validate cache is including enough apps or not
-- Increment `cache_version`
-  if cache should be expired without changing `packages_to_install`
+- If parameter `cache: true`,
+  - Restore cache instead of installing scoop and apps
+  - If cache unavailable, create cache after installing scoop and apps
+- Cache integrated into `setup-scoop` caches only Scoop directory
+  - The cache does not include resources
+    that apps install outside the Scoop directory.
+    (`Program Files` dir, system directory,  registry, ...)
 
-```yaml
-env:
-  packages_to_install: shellcheck
-  cache_version: v0
-  cache_hash_seed_file_path: './.github/workflows/cache_seed_file_for_scoop.txt'
-```
+#### `cache`
 
-(snipped)
+| Value | Behavior | Use case |
+| --- | --- | --- |
+| `true` | Cache Scoop directory after setup. Skip setup if cache was restored. | All apps are installed into Scoop directory |
+| `false` (default) | Not create cache, and not restore cache. | Some app(s) are installed into outside of Scoop directory (e.g. `Program Files`) |
 
-<!-- markdownlint-disable line-length -->
+#### `cache_key_prefix`
 
-```yaml
-jobs:
-  build:
-    steps:
-    - name: Create cache seed file
-      run: echo ${{ env.packages_to_install }} >> ${{ env.cache_hash_seed_file_path }}
+- Prefix string for cache key which will be used if `cache: true`
+- `setup-scoop-v6` as default
 
-    - name: Restore cache if available
-      id: restore_cache
-      uses: actions/cache@v4
-      with:
-        path: '~/scoop'
-        key: cache_version_${{ env.cache_version }}-${{ hashFiles(env.cache_hash_seed_file_path) }}
+#### `cache_key_suffix`
 
-    - name: Install scoop (Windows)
-      uses: MinoruSekine/setup-scoop@v5
-      if: steps.restore_cache.outputs.cache-hit != 'true'
-      with:
-        install_scoop: 'true'
-        buckets: extras
-        apps: ${{ env.packages_to_install }}
-        scoop_update: 'true'
-        update_path: 'true'
+- Suffix string for cache key which will be used if `cache: true`
+- If several jobs (also `matrix` processing)
+  use `setup-scoop` with the same parameters and `cache: true`,
+  specify each jobs' specific string to this parameter
+  - `setup-scoop` includes runner information into cache key,
+    so `cache_key_suffix` is not necessary
+    if `matrix` is used only for multiple `runs-on:`
+- Cache will be shared if all parameters except `cache_key_suffix` are the same
+  even if `cache_key_suffix` is different
+- Empty string as default
 
-    - name: Setup scoop PATH (Windows)
-      uses: MinoruSekine/setup-scoop@v5
-      if: steps.restore_cache.outputs.cache-hit == 'true'
-      with:
-        install_scoop: 'false'
-        scoop_update: 'false'
-        update_path: 'true'
-```
+#### `cache_version`
 
-<!-- markdownlint-enable line-length -->
+- Version number of cache
+- Update this to ignore old cache without changing other parameters
+- `v1` as default
+
+> [!NOTE]
+> The string specified in `cache_version` can't include `_`
+> by `setup-scoop`'s implementation constraints.
+
+## FAQ
+
+### Why is `cache: false` default?
+
+- `cache: true` only caches Scoop directory.
+  Misunderstanding "All apps will be cached" makes serious confusion
+- In some cases, performance improvement by cache is small or negative
