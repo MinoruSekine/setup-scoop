@@ -423,3 +423,85 @@ jobs:
           if(Get-Command scoop -ErrorAction SilentlyContinue) {
             Write-Error "Unexpectedly found scoop." -ErrorAction Stop
           }
+
+  cache_save_if_unavailable:
+    # The early stages of this job are almost the same as `install_apps`.
+    # So this job will be run after `install_apps` completes,
+    # for easier troubleshooting and debugging.
+    needs: [validate_inputs_target, install_apps]
+    if: inputs.target == 'pr'
+
+    env:
+      TEST_TARGET_APPS: "fclones jq xh"
+
+    strategy:
+      max-parallel: 1
+      matrix:
+        os: ${{ fromJson(inputs.os_list_1) }}
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - if: inputs.target == 'pr'
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - if: inputs.target == 'pr'
+        name: Run actions locally
+        uses: ./
+        with:
+          cache: true
+          cache_key_suffix: save
+          buckets: extras
+          apps: ${{ env.TEST_TARGET_APPS }}
+
+      - name: Validate apps are available or not
+        shell: pwsh
+        run: |
+          "${{ env.TEST_TARGET_APPS }}" -split " " | ForEach-Object {
+            Get-Command $_ -ErrorAction Stop
+          }
+
+  cache_restore:
+    needs: cache_save_if_unavailable
+    if: inputs.target == 'pr'
+
+    env:
+      TEST_TARGET_APPS: "fclones jq xh"
+
+    strategy:
+      max-parallel: 1
+      matrix:
+        os: ${{ fromJson(inputs.os_list_1) }}
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - if: inputs.target == 'pr'
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - if: inputs.target == 'pr'
+        id: locally-with-cache
+        name: Run actions locally with cache
+        uses: ./
+        with:
+          cache: true
+          cache_key_suffix: restore
+          buckets: extras
+          apps: ${{ env.TEST_TARGET_APPS }}
+
+      - name: Validte cache hit
+        if: ${{ steps.locally-with-cache.outputs.cache_hit != 'true' }}
+        shell: pwsh
+        run: |
+          Write-Error "Cache was not hit." -ErrorAction Stop
+
+      - name: Validate apps are available or not
+        shell: pwsh
+        run: |
+          "${{ env.TEST_TARGET_APPS }}" -split " " | ForEach-Object {
+            Get-Command $_ -ErrorAction Stop
+          }

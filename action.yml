@@ -45,9 +45,118 @@ inputs:
     description: 'Apps to be installed'
     required: false
     default: ''
+  cache:
+    description: 'Restore cached Scoop directory if available, and save cache'
+    required: false
+    default: 'false'
+  cache_key_prefix:
+    description: 'Prefix of cache key'
+    required: false
+    default: 'setup-scoop-v6'
+  cache_key_suffix:
+    description: 'Suffix of cache key'
+    required: false
+    default: ''
+  cache_version:
+    description: 'Version string of cache'
+    required: false
+    default: 'v1'
+
+outputs:
+  cache_hit:
+    description: 'Cache was used or not'
+    value: ${{ steps.cache-results.outputs.cache-hit }}
+
+# yamllint disable rule:line-length
 runs:
   using: 'composite'
   steps:
+    - name: 'Check runner os'
+      shell: pwsh
+      run: |
+        & $env:TEST_RUNNER_OS_PS1
+      env:
+        TEST_RUNNER_OS_PS1: ${{ github.action_path }}/scripts/test_runner_os.ps1
+
+    - name: 'Check inputs for action'
+      shell: pwsh
+      run: |
+        & $env:TEST_ACTION_PARAMS_PS1
+      env:
+        TEST_ACTION_PARAMS_PS1: ${{ github.action_path }}/scripts/test_action_params.ps1
+        INSTALL_SCOOP: ${{ inputs.install_scoop }}
+        SCOOP_UPDATE: ${{ inputs.scoop_update }}
+        SCOOP_CHECKUP: ${{ inputs.scoop_checkup }}
+        UPDATE_PATH: ${{ inputs.update_path }}
+        RUN_AS_ADMIN: ${{ inputs.run_as_admin }}
+        CACHE: ${{ inputs.cache }}
+        CACHE_VERSION: ${{ inputs.cache_version }}
+
+    - name: 'Create hash seed file for cache key'
+      if: ${{ inputs.cache == 'true' }}
+      shell: pwsh
+      run: |
+        & $env:CREATE_HASH_SEED_PS1 > $env:HASH_SEED_FILE_PATH
+      env:
+        CREATE_HASH_SEED_PS1: ${{ github.action_path }}/scripts/create_cache_key_hash_seed.ps1
+        HASH_SEED_FILE_PATH: ${{ runner.temp }}/hash_inputs.txt
+        BUCKETS: ${{ inputs.buckets }}
+        CUSTOM_BUCKETS: ${{ inputs.custom_buckets }}
+        LOCAL_BUCKETS: ${{ inputs.local_buckets }}
+        APPS: ${{ inputs.apps }}
+
+    - name: 'Create hash from seed file.'
+      id: hash
+      if: ${{ inputs.cache == 'true' }}
+      shell: pwsh
+      run: |
+        "value=$((Get-FileHash -Path $env:HASH_SEED_FILE_PATH -Algorithm SHA256).Hash)" >> $env:GITHUB_OUTPUT
+      env:
+        HASH_SEED_FILE_PATH: ${{ runner.temp }}/hash_inputs.txt
+
+    - name: 'Check OS'
+      id: check-os
+      if: ${{ inputs.cache == 'true' }}
+      shell: pwsh
+      run: |
+        $osDetail = (Get-CimInstance Win32_OperatingSystem).Caption
+        "os=$osDetail" >> $env:GITHUB_OUTPUT
+
+    - name: 'Resolve scoop dir'
+      id: resolve-scoop-dir
+      if: ${{ inputs.cache == 'true' }}
+      shell: pwsh
+      run: |
+        $scoopDir = if ($env:SCOOP) { $env:SCOOP } else { "$env:USERPROFILE/scoop" }
+        "path=$scoopDir" >> $env:GITHUB_OUTPUT
+
+    - name: 'Cache action'
+      id: cache-action
+      if: ${{ inputs.cache == 'true' }}
+      env:
+        HASH_SEED_FILE_PATH: ${{ runner.temp }}/hash_inputs.txt
+      uses: actions/cache@v6
+      with:
+        restore-keys: ${{ inputs.cache_key_prefix }}_${{ steps.check-os.outputs.os }}_${{ steps.hash.outputs.value }}_${{ inputs.cache_version }}_
+        key: ${{ inputs.cache_key_prefix }}_${{ steps.check-os.outputs.os }}_${{ steps.hash.outputs.value }}_${{ inputs.cache_version }}_${{ inputs.cache_key_suffix }}
+        path: ${{ steps.resolve-scoop-dir.outputs.path }}
+        fail-on-cache-miss: true  # To detect cachs miss.
+      continue-on-error: true
+
+    - name: 'Validate results of cache works'
+      id: cache-results
+      shell: pwsh
+      env:
+        CACHE: ${{ inputs.cache }}
+        CACHE_ACTION: ${{ steps.cache-action.outcome }}
+      run: |
+        if ($env:CACHE -eq 'true' -and $env:CACHE_ACTION -eq 'success') {
+          "cache-hit=true" >> $env:GITHUB_OUTPUT
+        } else {
+          "cache-hit=false" >> $env:GITHUB_OUTPUT
+        }
+# yamllint enable rule:line-length
+
     - name: 'Setup scoop'
       shell: pwsh
       run: |
@@ -63,3 +172,6 @@ runs:
         LOCAL_BUCKETS: ${{ inputs.local_buckets }}
         RUN_AS_ADMIN: ${{ inputs.run_as_admin }}
         APPS: ${{ inputs.apps }}
+        CACHE: ${{ inputs.cache }}
+        CACHE_HIT: ${{ steps.cache-results.outputs.cache-hit}}
+        CACHE_VERSION: ${{ inputs.cache_version }}

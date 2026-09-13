@@ -376,7 +376,7 @@ jobs:
           -ErrorAction Stop
         shell: pwsh
 
-  actions_cache_create:
+  external_actions_cache_save:
     if: ${{ inputs.target == 'pr' || inputs.target == 'dev' }}
     needs: validate_inputs_target
 
@@ -407,14 +407,14 @@ jobs:
           path: '~/scoop/'
           key: setup-scoop_ci_edge-case_${{ matrix.os }}_v1
 
-  actions_cache_restore:
+  external_actions_cache_restore:
     if: ${{ inputs.target == 'pr' || inputs.target == 'dev' }}
-    needs: actions_cache_create
+    needs: external_actions_cache_save
 
     strategy:
       max-parallel: 1
       matrix:
-        os: ${{ fromJson(inputs.os_list_2) }}  # Same of actions_cache_create
+        os: ${{ fromJson(inputs.os_list_2) }}  # Same os of cache save job
 
     runs-on: ${{ matrix.os }}
 
