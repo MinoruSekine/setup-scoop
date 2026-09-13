@@ -6,7 +6,7 @@ Invoke-External -Command "$($PSScriptRoot)\test_runner_os.ps1"
 # Fail fast by unsupported Action parameter(s).
 Invoke-External -Command "$($PSScriptRoot)\test_action_params.ps1"
 
-if($env:INSTALL_SCOOP -eq 'true' -or $env:INSTALL_SCOOP -eq 'force') {
+if ($env:INSTALL_SCOOP -eq 'true' -or $env:INSTALL_SCOOP -eq 'force') {
     $params = @()
     if($env:INSTALL_SCOOP -ne 'force') {
         $params += "-SkipIfAvailable"
@@ -18,7 +18,7 @@ if($env:INSTALL_SCOOP -eq 'true' -or $env:INSTALL_SCOOP -eq 'force') {
       -Parameters $params
     Invoke-External -Command "scoop" -Parameters "--version"
 }
-if($env:UPDATE_PATH -eq 'true') {
+if ($env:UPDATE_PATH -eq 'true') {
     $scoopPath = Join-Path (Resolve-Path ~).Path "scoop\shims"
     $scoopPath >> $Env:GITHUB_PATH
     $env:PATH = "$scoopPath;$env:PATH"
@@ -37,10 +37,10 @@ if ($env:LOCAL_BUCKETS) {
     Invoke-External -Command "$($PSScriptRoot)\add_local_buckets.ps1" `
       -Parameters "$env:LOCAL_BUCKETS"
 }
-if($env:SCOOP_UPDATE -eq 'true') {
+if ($env:SCOOP_UPDATE -eq 'true') {
     Invoke-External -Command "scoop" -Parameters "update"
 }
-if($env:SCOOP_CHECKUP -eq 'true') {
+if ($env:SCOOP_CHECKUP -eq 'true') {
     Invoke-External -Command "scoop" -Parameters "checkup"
 }
 if ($env:APPS) {
