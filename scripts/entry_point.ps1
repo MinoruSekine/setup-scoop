@@ -19,7 +19,9 @@ if($env:INSTALL_SCOOP -eq 'true' -or $env:INSTALL_SCOOP -eq 'force') {
     Invoke-External -Command "scoop" -Parameters "--version"
 }
 if($env:UPDATE_PATH -eq 'true') {
-    Join-Path (Resolve-Path ~).Path "scoop\shims" >> $Env:GITHUB_PATH
+    $scoopPath = Join-Path (Resolve-Path ~).Path "scoop\shims"
+    $scoopPath >> $Env:GITHUB_PATH
+    $env:PATH = "$scoopPath;$env:PATH"
 }
 if ($env:BUCKETS) {
     Invoke-External -Command "$($PSScriptRoot)\add_known_buckets.ps1" `
