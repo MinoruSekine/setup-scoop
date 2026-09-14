@@ -262,3 +262,72 @@ jobs:
             Write-Error "scoop was not installed when run_as_admin=false." `
             -ErrorAction Stop
           }
+
+  actions_cache_create:
+    needs: validate_inputs_target
+
+    strategy:
+      matrix:
+        os: [windows-2025, windows-2022, windows-11-arm]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - if: inputs.target == 'pr'
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - id: pr
+        if: inputs.target == 'pr'
+        name: Run actions locally
+        uses: ./
+
+      - id: dev
+        if: inputs.target == 'dev'
+        uses: MinoruSekine/setup-scoop@main
+
+      - uses: actions/cache@v6
+        with:
+          path: '~/scoop/'
+          key: setup-scoop_ci_edge-case_${{ matrix.os }}_v1
+
+  actions_cache_restore:
+    needs: actions_cache_create
+
+    strategy:
+      matrix:
+        os: [windows-2025, windows-2022, windows-11-arm]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - if: inputs.target == 'pr'
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - uses: actions/cache@v6
+        id: cache
+        with:
+          path: '~/scoop/'
+          key: setup-scoop_ci_edge-case_${{ matrix.os }}_v1
+
+      - if: steps.cache.outputs.cache-hit != 'true'
+        name: Confirm cache was restored
+        shell: pwsh
+        run: |
+          Write-Error "Cache was not restored." -ErrorAction Stop
+
+      - id: pr
+        if: inputs.target == 'pr'
+        name: Run actions locally
+        uses: ./
+        with:
+          install_scoop: false
+
+      - id: dev
+        if: inputs.target == 'dev'
+        uses: MinoruSekine/setup-scoop@main
+        with:
+          install_scoop: false
