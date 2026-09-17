@@ -172,59 +172,53 @@
 | `true` (default) | Add default `scoop` path to environment variable `PATH`. | Standard use. |
 | `false` | Skip updating environment variable `PATH`. | When another step sets `PATH` or will not use `scoop`. |
 
-## Advanced usage
+### Cache parameters
 
-### Sample to improve workflow performance with `actions/cache`
+> [!NOTE]
+> `cache` and related parameters are available in `v6` or later.
 
-- If cache is available, `install_scoop` will be `false`
-  to skip installation and only `update_path` will be `true`
-- Include `packages_to_install` into cache seed
-  to validate cache is including enough apps or not
-- Increment `cache_version`
-  if cache should be expired without changing `packages_to_install`
+- If parameter `cache: true`,
+  - Restore cache instead of installing scoop and apps
+  - If cache unavailable, create cache after installing scoop and apps
+- Cache integrated into `setup-scoop` only caches only `~/scoop` dir
+  - So cache will not work if apps install resources into outside of `~/scoop` dir
+    (`Program Files` dir, system directory,  registry, ...)
 
-```yaml
-env:
-  packages_to_install: shellcheck
-  cache_version: v0
-  cache_hash_seed_file_path: './.github/workflows/cache_seed_file_for_scoop.txt'
-```
+#### `cache`
 
-(snipped)
+| Value | Behavior | Use case |
+| --- | --- | --- |
+| `true` | Cache `~/scoop` dir after setup. Skip setup if cache was restored. | All apps are installed into `~/scoop` dir |
+| `false` (default) | Not create cache, and not restore cache. | Some app(s) are installed into outside of `~/scoop` dir (e.g. `Program Files`) |
 
-<!-- markdownlint-disable line-length -->
+#### `cache_key_prefix`
 
-```yaml
-jobs:
-  build:
-    steps:
-    - name: Create cache seed file
-      run: echo ${{ env.packages_to_install }} >> ${{ env.cache_hash_seed_file_path }}
+- Prefix string for cache key which will be used if `cache: true`
+- `setup-scoop-v6` as default
 
-    - name: Restore cache if available
-      id: restore_cache
-      uses: actions/cache@v4
-      with:
-        path: '~/scoop'
-        key: cache_version_${{ env.cache_version }}-${{ hashFiles(env.cache_hash_seed_file_path) }}
+#### `cache_key_suffix`
 
-    - name: Install scoop (Windows)
-      uses: MinoruSekine/setup-scoop@v5
-      if: steps.restore_cache.outputs.cache-hit != 'true'
-      with:
-        install_scoop: 'true'
-        buckets: extras
-        apps: ${{ env.packages_to_install }}
-        scoop_update: 'true'
-        update_path: 'true'
+- Suffix string for cache key which will be used if `cache: true`
+- If several jobs (also `matrix` processing)
+  use `setup-scoop` with the same parameters and `cache: true`,
+  specify each jobs' specific string to this parameter
+  - `setup-scoop` includes runner information into cache key,
+    so `cache_key_suffix` is not necessary
+    if `matrix` is used only for multiple `runs-on:`
+- Cache will be shared if all parameters except `cache_key_suffix` are the same
+  even if `cache_key_suffix` is different
+- Empty string as default
 
-    - name: Setup scoop PATH (Windows)
-      uses: MinoruSekine/setup-scoop@v5
-      if: steps.restore_cache.outputs.cache-hit == 'true'
-      with:
-        install_scoop: 'false'
-        scoop_update: 'false'
-        update_path: 'true'
-```
+#### `cache_version`
 
-<!-- markdownlint-enable line-length -->
+- Version number of cache
+- Update this to ignore old cache without changing other parameters
+- `v1` as default
+
+## FAQ
+
+### Why is `cache: false` default?
+
+- `cache: true` only caches `~/scoop` dir.
+  Misunderstanding "All apps will be cached" makes serious confusion
+- In some cases, performance improvement by cache is small or negative
