@@ -129,3 +129,35 @@ Describe 'Test-BucketLocalPath' {
         }
     }
 }
+
+Describe 'Test-CacheVersion' {
+    $modulePath = Join-Path $PSScriptRoot "Test-Params.psm1"
+    Import-Module $modulePath -Force
+
+
+    Context 'ValidCacheVersion' {
+        It 'Cache version string <cacheVersion> should be valid' -ForEach @(
+            @{ cacheVersion = 'v0' }
+            @{ cacheVersion = 'v0.1' }
+            @{ cacheVersion = 'v1' }
+            @{ cacheVersion = 'v2' }
+            @{ cacheVersion = 'v10' }
+            @{ cacheVersion = 'v1.1' }
+        ) {
+            Test-CacheVersion $cacheVersion | Should -Be $true
+        }
+    }
+
+    Context 'InvalidCacheVersion' {
+        It 'Cache version string <cacheVersion> should be invalid' -ForEach @(
+            @{ cacheVersion = '_v0' }
+            @{ cacheVersion = '_v0.1' }
+            @{ cacheVersion = 'v1_' }
+            @{ cacheVersion = 'v2_' }
+            @{ cacheVersion = '_v10_' }
+            @{ cacheVersion = 'v1_1' }
+        ) {
+            Test-CacheVersion $cacheVersion | Should -Be $false
+        }
+    }
+}
