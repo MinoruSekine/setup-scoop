@@ -43,7 +43,7 @@ $actionParams = @(
     @{
         value = $env:SCOOP_UPDATE;
         name = 'SCOOP_UPDATE';
-        allowed = @('true', 'false')
+        allowed = @('true', 'false', 'all')
     };
     @{
         value = $env:SCOOP_CHECKUP;
