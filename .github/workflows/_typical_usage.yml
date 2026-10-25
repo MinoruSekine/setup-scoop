@@ -438,6 +438,7 @@ jobs:
       max-parallel: 1
       matrix:
         os: ${{ fromJson(inputs.os_list_1) }}
+        update: [true, all]
 
     runs-on: ${{ matrix.os }}
 
@@ -452,9 +453,11 @@ jobs:
         uses: ./
         with:
           cache: true
+          cache_key_prefix: setup-scoop-v6-scoop-update-${{ matrix.update }}
           cache_key_suffix: save
           buckets: extras
           apps: ${{ env.TEST_TARGET_APPS }}
+          scoop_update: ${{ matrix.update }}
 
       - name: Validate apps are available or not
         shell: pwsh
@@ -474,6 +477,7 @@ jobs:
       max-parallel: 1
       matrix:
         os: ${{ fromJson(inputs.os_list_1) }}
+        update: [true, all]
 
     runs-on: ${{ matrix.os }}
 
@@ -489,9 +493,11 @@ jobs:
         uses: ./
         with:
           cache: true
+          cache_key_prefix: setup-scoop-v6-scoop-update-${{ matrix.update }}
           cache_key_suffix: restore
           buckets: extras
           apps: ${{ env.TEST_TARGET_APPS }}
+          scoop_update: ${{ matrix.update }}
 
       - name: Validte cache hit
         if: ${{ steps.locally-with-cache.outputs.cache_hit != 'true' }}

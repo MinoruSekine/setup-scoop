@@ -166,6 +166,7 @@
 | --- | --- | --- |
 | `true` (default) | Process `scoop update` before installing `apps`. | Standard use. |
 | `false` | Skip `scoop update`. | Reducing duration when skipping update is safe. |
+| `all` | Process `scoop update "*"` to update all buckets and apps. | Always needs latest version of apps even if `cache: true`. |
 
 ### `scoop_checkup`
 

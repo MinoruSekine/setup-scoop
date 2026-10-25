@@ -35,8 +35,9 @@ if ($env:CACHE_HIT -ne 'true') {
           -Parameters "$env:LOCAL_BUCKETS"
     }
 }
-if ($env:SCOOP_UPDATE -eq 'true') {
-    Invoke-External -Command "scoop" -Parameters "update"
+switch ($env:SCOOP_UPDATE) {
+    'true' { Invoke-External -Command "scoop" -Parameters "update" }
+    'all'  { Invoke-External -Command "scoop" -Parameters "update", "*" }
 }
 if ($env:SCOOP_CHECKUP -eq 'true') {
     Invoke-External -Command "scoop" -Parameters "checkup"

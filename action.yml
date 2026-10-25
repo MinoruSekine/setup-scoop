@@ -13,7 +13,10 @@ inputs:
     required: true
     default: 'true'
   scoop_update:
-    description: 'Call scoop update if true (default)'
+    description: >-
+      Run `scoop update` when true (default),
+      skip updates when false,
+      or run `scoop update "*"` when all
     required: true
     default: 'true'
   scoop_checkup:
